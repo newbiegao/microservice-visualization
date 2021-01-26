@@ -39,9 +39,34 @@ public abstract class Node implements Charts {
 
         StringBuilder stringBuilder = new StringBuilder() ;
         stringBuilder.append(this.getId()) ;
-        if( this.title == null  ) this.title = "" ;
+        if ( this.title == null  ) { this.title = "" ; }
         stringBuilder.append(this.nodeTemplate.replace("${title}" , this.title ))  ;
         stringBuilder.append(";") ;
         return stringBuilder.toString() ;
     }
+
+    public static Node getAppNodeInstance( String id ){
+        return new AppNode(id) ;
+    }
+
+    public static Node getDataBaseInstance( String id ){
+        return new DataBaseNode(id) ;
+    }
+
+    public static Node getNginxNodeInstance( String id ){
+        return new NginxNode(id) ;
+    }
+
+    public static Node getRedisNodeInstance( String id ){
+        return new RedisNode(id) ;
+    }
+
+    public static Node getUserNodeInstance( String id ){
+        return new UserNode(id) ;
+    }
+
+    public static Node getMQNodeInstance( String id ){
+        return new MQNode(id);
+    }
+
 }

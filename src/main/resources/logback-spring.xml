@@ -20,5 +20,9 @@
         <appender-ref ref="Console" />
     </logger>
 
+    <logger name="org.keron.microservicevisualization.*" level="debug" additivity="false">
+        <appender-ref ref="Console" />
+    </logger>
+
 
 </configuration>

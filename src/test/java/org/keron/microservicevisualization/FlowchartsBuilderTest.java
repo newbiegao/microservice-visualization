@@ -19,7 +19,7 @@ public class FlowchartsBuilderTest {
 
         String text = builder.build(graph) ;
 
-        assertThat(text).isEqualTo("graph BT") ;
+        assertThat(text).contains("BT") ;
     }
 
     @Test
@@ -31,7 +31,7 @@ public class FlowchartsBuilderTest {
 
         AppNode appNode = new AppNode("app1") ;
         appNode.setTitle("app node 1");
-        graph.getNodeList().add(appNode) ;
+        graph.addNode(appNode);
 
         String text = builder.build(graph) ;
 
@@ -79,7 +79,6 @@ public class FlowchartsBuilderTest {
         graph.addNode(dataBaseNode);
 
         // links
-
         Link link = new Link("app1" , "db1") ;
         link.setTitle(" app query db1 ");
         graph.addLink(link);

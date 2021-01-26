@@ -23,11 +23,11 @@ public class FlowchartsBuilder {
 
         // build links
         for( Link link : graph.getLinks() ){
-
             stringBuilder.append( link.getNodeText() ) ;
-
         }
 
+        // add callback
+        stringBuilder.append(" click mq call callback();") ;
 
         String text = stringBuilder.toString() ;
 

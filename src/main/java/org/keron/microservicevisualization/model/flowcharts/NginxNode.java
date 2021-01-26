@@ -2,9 +2,9 @@ package org.keron.microservicevisualization.model.flowcharts;
 
 public class NginxNode extends Node {
 
-
-    @Override
-    public String getNodeText() {
-        return null;
+    public NginxNode( String id ){
+        super.setId(id);
+        this.nodeTemplate = "{\" <p>fa:fa-sitemap ${title}</p> \"}" ;
     }
+
 }

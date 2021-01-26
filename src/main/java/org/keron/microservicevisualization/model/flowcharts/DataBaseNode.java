@@ -6,7 +6,7 @@ public class DataBaseNode extends Node {
 
         super.setId( id );
 
-        this.nodeTemplate = "[( ${title} )]" ;
+        this.nodeTemplate = "[(\" <p>fa:fa-database ${title}</p> \")]" ;
 
     }
 

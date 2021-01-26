@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>mermaid flowchart</title>
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/floatPanel.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="mermaid"></div>
+<script src="/js/mermaid.min.js"></script>
+<script src="/js/jquery-3.5.1.min.js"></script>
+<script src="/js/floatPanel.min.js"></script>
+
+
+<script>
+
+     var callback = function(){
+          alert('A callback was triggered' + nodeId );
+     }
+
+    mermaid.initialize({
+        startOnLoad: false ,
+        securityLevel: 'loose' ,
+        flowchart: {
+            useMaxWidth: false ,
+            htmlLabels: true ,
+            curve:'cardinal'
+        }
+    });
+
+    $(function(){
+
+        var element = document.querySelector("#mermaid") ;
+        var insertSvg = function(svgCode){
+                element.innerHTML = svgCode ;
+            };
+
+         var request = $.ajax({ url: "/chart",  method: "GET", dataType: "text"  });
+         request.done(function(text){
+            mermaid.mermaidAPI.render('mermaid', text , insertSvg);
+         }) ;
+
+         request.fail(function(){
+            alert("请求作图数据失败");
+         });
+    });
+
+    // click
+    var panel2 = FloatPanel('panel2');
+    var panelConfig = {
+        header:{
+            content:'header',
+        },
+        body:{
+            content:'body',
+        },
+        footer:{
+            content:'footer',
+        },
+        floatHeight: 100
+    }
+
+    function show(event , id){
+
+        // load data
+        var srvReq = $.ajax({ url: "/server/"+id ,  method: "GET", dataType: "json"  });
+         srvReq.done(function(dataJson){
+
+               panelConfig.header.content = dataJson.title ;
+               panelConfig.body.content = dataJson.descripte ;
+               panelConfig.footer.content = dataJson.name ;
+               panel2.set(panelConfig);
+               panel2.show(event) ;
+         }) ;
+
+         srvReq.fail(function(){
+            alert("请求服务信息失败");
+         });
+
+    }
+
+</script>
+</body>
+</html>
