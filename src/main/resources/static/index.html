@@ -30,6 +30,7 @@
         }
     });
 
+    // page init
     $(function(){
 
         var element = document.querySelector("#mermaid") ;
@@ -47,7 +48,7 @@
          });
     });
 
-    // click
+    // node click
     var panel2 = FloatPanel('panel2');
     var panelConfig = {
         header:{
@@ -78,7 +79,6 @@
          srvReq.fail(function(){
             alert("请求服务信息失败");
          });
-
     }
 
 </script>
