@@ -6,7 +6,7 @@ public class UserNode extends Node {
 
         super.setId( id );
 
-        this.nodeTemplate = "((\" <p onclick=show(event); >fa:fa-user-circle-o ${title}</p> \"))" ;
+        this.nodeTemplate = "((\" <p onclick=show(event,'${id}'); >fa:fa-user-circle-o ${title}</p> \"))" ;
     }
 
 }

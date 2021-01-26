@@ -26,8 +26,6 @@ public class FlowchartsBuilder {
             stringBuilder.append( link.getNodeText() ) ;
         }
 
-        // add callback
-        stringBuilder.append(" click mq call callback();") ;
 
         String text = stringBuilder.toString() ;
 

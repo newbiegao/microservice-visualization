@@ -6,7 +6,7 @@ public class MQNode extends Node {
 
         super.setId( id );
 
-        this.nodeTemplate = "{{\" <p>fa:fa-envelope ${title}</p> \"}}" ;
+        this.nodeTemplate = "{{\" <p onclick=show(event,'${id}'); >fa:fa-envelope ${title}</p> \"}}" ;
     }
 
 }

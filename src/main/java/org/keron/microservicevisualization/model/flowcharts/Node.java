@@ -40,7 +40,7 @@ public abstract class Node implements Charts {
         StringBuilder stringBuilder = new StringBuilder() ;
         stringBuilder.append(this.getId()) ;
         if ( this.title == null  ) { this.title = "" ; }
-        stringBuilder.append(this.nodeTemplate.replace("${title}" , this.title ))  ;
+        stringBuilder.append(this.nodeTemplate.replace("${title}" , this.title ).replace("${id}" , this.getId()))  ;
         stringBuilder.append(";") ;
         return stringBuilder.toString() ;
     }
