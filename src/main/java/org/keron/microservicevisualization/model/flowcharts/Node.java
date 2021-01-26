@@ -69,4 +69,6 @@ public abstract class Node implements Charts {
         return new MQNode(id);
     }
 
+    public static Node getOuterNodeInstance( String id ) { return new OuterNode(id) ; }
+
 }

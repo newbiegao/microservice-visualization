@@ -99,6 +99,14 @@ public class IndexControler {
         appNode3.setTitle("app3");
         graph.addNode(appNode3);
 
+        Node outerNode = Node.getOuterNodeInstance("outer") ;
+        outerNode.setTitle("outer");
+        graph.addNode(outerNode);
+
+        Node outerNode1 = Node.getOuterNodeInstance("outer1") ;
+        outerNode1.setTitle("外部服务");
+        graph.addNode(outerNode1);
+
         // links
         Link link1 = new Link("app1" ,"app2") ;
         link1.setTitle(" http 调用 ");
@@ -116,6 +124,8 @@ public class IndexControler {
         link7.setTitle("发送消息到kafaka");
         Link link8 = new Link("app3" ,"mq") ;
         link8.setTitle("消费消息");
+        Link link9 = new Link("app3" ,"outer") ;
+        link9.setTitle("发送短信消息");
 
         graph.addLink(link1);
         graph.addLink(link2);
@@ -125,6 +135,7 @@ public class IndexControler {
         graph.addLink(link6);
         graph.addLink(link7);
         graph.addLink(link8);
+        graph.addLink(link9);
 
         return builder.build(graph) ;
 
