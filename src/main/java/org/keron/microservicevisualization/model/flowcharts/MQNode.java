@@ -6,8 +6,12 @@ public class MQNode extends Node {
 
         super.setId( id );
 
-        this.nodeTemplate = "{{\" <p onclick=show(event,'${id}'); >fa:fa-envelope ${title}</p> \"}}" ;
+        this.nodeTemplate = "{{\" <p onclick=show(event,'${id}'); >fa:fa-envelope(${count}) ${title}</p> \"}}" ;
     }
 
+    @Override
+    public String processNodeTextExt(String nodeText) {
+        return nodeText ;
+    }
 }
 

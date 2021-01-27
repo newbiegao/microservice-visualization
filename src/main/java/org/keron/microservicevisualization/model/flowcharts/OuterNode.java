@@ -6,8 +6,12 @@ public class OuterNode extends Node {
 
         super.setId( id );
 
-        this.nodeTemplate = "[[\" <p onclick=show(event,'${id}'); >fa:fa-cubes ${title}</p> \"]]" ;
+        this.nodeTemplate = "[[\" <p onclick=show(event,'${id}'); >fa:fa-cube(${count}) ${title}</p> \"]]" ;
     }
 
+    @Override
+    public String processNodeTextExt(String nodeText) {
+        return nodeText ;
+    }
 }
 

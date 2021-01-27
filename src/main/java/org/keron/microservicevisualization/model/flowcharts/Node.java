@@ -10,6 +10,16 @@ public abstract class Node implements Charts {
 
     protected String nodeTemplate ;
 
+    private Integer count = 1 ;
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
+    }
+
     public String getId() {
         return id;
     }
@@ -34,13 +44,19 @@ public abstract class Node implements Charts {
         this.description = description;
     }
 
+    public abstract String processNodeTextExt( String nodeText ) ;
+
     @Override
     public String getNodeText() {
 
         StringBuilder stringBuilder = new StringBuilder() ;
         stringBuilder.append(this.getId()) ;
         if ( this.title == null  ) { this.title = "" ; }
-        stringBuilder.append(this.nodeTemplate.replace("${title}" , this.title ).replace("${id}" , this.getId()))  ;
+
+        // 处理节点模版信息
+        String nodeText = this.nodeTemplate.replace("${title}" , this.title ).replace("${id}" , this.getId()).replace("${count}",this.count.toString()) ;
+        stringBuilder.append(  processNodeTextExt(nodeText) )  ;
+
         stringBuilder.append(";") ;
         return stringBuilder.toString() ;
     }

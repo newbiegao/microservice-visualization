@@ -3,10 +3,8 @@ package org.keron.microservicevisualization.model.flowcharts;
 public class Link implements Charts {
 
     public Link( String  formNodeId , String  toNodeId){
-
         this.formNodeId = formNodeId ;
         this.toNodeId = toNodeId ;
-
     }
 
     protected String linkTemplate = " --> " ;

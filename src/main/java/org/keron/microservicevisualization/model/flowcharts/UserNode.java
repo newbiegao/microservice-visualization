@@ -9,5 +9,9 @@ public class UserNode extends Node {
         this.nodeTemplate = "((\" <p onclick=show(event,'${id}'); >fa:fa-user-circle-o ${title}</p> \"))" ;
     }
 
+    @Override
+    public String processNodeTextExt(String nodeText) {
+        return nodeText;
+    }
 }
 

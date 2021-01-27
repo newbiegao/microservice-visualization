@@ -67,16 +67,19 @@ public class IndexControler {
         nginxNode.setTitle("Nginx Server");
         graph.addNode(nginxNode) ;
 
-        Node appNode = new AppNode("app1") ;
+        Node appNode = Node.getAppNodeInstance("app1") ;
         appNode.setTitle("app1");
+        appNode.setCount(3);
         graph.addNode(appNode) ;
 
         Node appNode1 = new AppNode("app2") ;
         appNode1.setTitle("app2");
+        appNode1.setCount(2);
         graph.addNode(appNode1) ;
 
         Node dataBaseNode = new DataBaseNode("db1") ;
         dataBaseNode.setTitle("DataBase 1");
+        dataBaseNode.setCount(2);
         graph.addNode(dataBaseNode);
 
         Node dataBaseNode1 = new DataBaseNode("db2") ;
