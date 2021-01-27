@@ -16,7 +16,7 @@ public class IndexControler {
     @GetMapping("/chart")
     public String loadChartText(){
 
-        return nodeTest() ;
+        return loadsubgraphTest() ;
 
     }
 
@@ -55,14 +55,62 @@ public class IndexControler {
         return   map.get(id) ;
     }
 
-    private String nodeTest(){
+    private String loadsubgraphTest(){
 
         FlowchartsBuilder builder = new FlowchartsBuilder() ;
         Graph graph = new Graph() ;
         graph.setLayout(Graph.TB);
 
         // nodes
+        Node appNode = new AppNode("app1") ;
+        appNode.setTitle("app1");
 
+        Node appNode1 = new AppNode("app2") ;
+        appNode1.setTitle("app2");
+
+        Node dataBaseNode = new DataBaseNode("db1") ;
+        dataBaseNode.setTitle("DataBase 1");
+
+
+        Node dataBaseNode1 = new DataBaseNode("db2") ;
+        dataBaseNode1.setTitle("DataBase 2");
+
+        Subgraph subgraph1 = new Subgraph("sub1") ;
+        subgraph1.setTitle("sub1");
+        subgraph1.addChild(appNode);
+
+        Subgraph subgraph2 = new Subgraph("sub2") ;
+        subgraph2.setTitle("sub2");
+        subgraph2.addChild(appNode1);
+
+        Subgraph subgraph = new Subgraph("sub") ;
+        subgraph.setTitle("sub");
+        subgraph.addChild(dataBaseNode);
+        subgraph.addChild(dataBaseNode1);
+        subgraph.addChild(subgraph1);
+        subgraph.addChild(subgraph2);
+
+        graph.addNode(subgraph);
+
+        // links
+        Link link1 = new Link("app1" ,"app2") ;
+        Link link2 = new Link("app1" ,"db1") ;
+        Link link3 = new Link("app2" ,"db2") ;
+
+        graph.addLink(link1);
+        graph.addLink(link2);
+        graph.addLink(link3);
+
+        return builder.build(graph) ;
+    }
+
+    private String laodTreeNodeTest(){
+
+        FlowchartsBuilder builder = new FlowchartsBuilder() ;
+        Graph graph = new Graph() ;
+        graph.setLayout(Graph.TB);
+
+        // nodes
         Node nginxNode = Node.getNginxNodeInstance("nginx") ;
         nginxNode.setTitle("Nginx Server");
         graph.addNode(nginxNode) ;

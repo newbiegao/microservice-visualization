@@ -57,7 +57,7 @@ public abstract class Node implements Charts {
         String nodeText = this.nodeTemplate.replace("${title}" , this.title ).replace("${id}" , this.getId()).replace("${count}",this.count.toString()) ;
         stringBuilder.append(  processNodeTextExt(nodeText) )  ;
 
-        stringBuilder.append(";") ;
+        stringBuilder.append("; ") ;
         return stringBuilder.toString() ;
     }
 
