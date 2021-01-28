@@ -8,6 +8,22 @@
 </head>
 <body>
 
+<div>
+    <span>图形类型:
+        <select id="chart_type" >
+            <option value="sub" >分组展示</option>
+            <option value="tree" >树形结构</option>
+        </select>
+    </span>
+
+    <span>图形方向:
+        <select id="chart_direction" >
+            <option value="TB" >纵向</option>
+            <option value="LR" >横向</option>
+        </select>
+    </span>
+    <input id="btn_load_chart" type="button" value="加载架构图" >
+</div>
 <div class="mermaid"></div>
 <script src="/js/mermaid.min.js"></script>
 <script src="/js/jquery-3.5.1.min.js"></script>
@@ -15,11 +31,7 @@
 
 
 <script>
-
-     var callback = function(){
-          alert('A callback was triggered' + nodeId );
-     }
-
+    // mermaid init config
     mermaid.initialize({
         startOnLoad: false ,
         securityLevel: 'loose' ,
@@ -32,13 +44,18 @@
 
     // page init
     $(function(){
+        loadChart() ;
+    });
 
-        var element = document.querySelector("#mermaid") ;
-        var insertSvg = function(svgCode){
-                element.innerHTML = svgCode ;
-            };
+    var element = document.querySelector("#mermaid") ;
+    var insertSvg = function(svgCode){
+        element.innerHTML = svgCode ;
+    };
 
-         var request = $.ajax({ url: "/chart",  method: "GET", dataType: "text"  });
+    function loadChart(){
+         var direction = $("#chart_direction").val() ;
+         var charts = $("#chart_type").val() ;
+         var request = $.ajax({ url: "/chart/"+charts+"/"+direction,  method: "GET", dataType: "text"  });
          request.done(function(text){
             mermaid.mermaidAPI.render('mermaid', text , insertSvg);
          }) ;
@@ -46,7 +63,7 @@
          request.fail(function(){
             alert("请求作图数据失败");
          });
-    });
+    }
 
     // node click
     var panel2 = FloatPanel('panel2');
@@ -80,6 +97,10 @@
             alert("请求服务信息失败");
          });
     }
+
+     $("#btn_load_chart").click(function(){
+            loadChart() ;
+     });
 
 </script>
 </body>

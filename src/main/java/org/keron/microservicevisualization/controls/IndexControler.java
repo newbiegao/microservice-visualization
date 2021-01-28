@@ -13,11 +13,17 @@ import java.util.HashMap;
 @RestController
 public class IndexControler {
 
-    @GetMapping("/chart")
-    public String loadChartText(){
+    @GetMapping("/chart/{id}/{direction}")
+    public String loadChartText( @PathVariable String id , @PathVariable String direction ){
 
-        return loadsubgraphTest() ;
+        if( id.equalsIgnoreCase("sub") ){
+            return loadsubgraphTest(direction) ;
+        }
+        else if( id.equalsIgnoreCase("tree") ){
+            return laodTreeNodeTest(direction) ;
+        }
 
+        return "" ;
     }
 
     @GetMapping("/server/{id}")
@@ -55,11 +61,11 @@ public class IndexControler {
         return   map.get(id) ;
     }
 
-    private String loadsubgraphTest(){
+    private String loadsubgraphTest( String direction ){
 
         FlowchartsBuilder builder = new FlowchartsBuilder() ;
         Graph graph = new Graph() ;
-        graph.setLayout(Graph.TB);
+        graph.setLayout(direction);
 
         // nodes
         Node appNode = new AppNode("app1") ;
@@ -104,11 +110,11 @@ public class IndexControler {
         return builder.build(graph) ;
     }
 
-    private String laodTreeNodeTest(){
+    private String laodTreeNodeTest( String direction ){
 
         FlowchartsBuilder builder = new FlowchartsBuilder() ;
         Graph graph = new Graph() ;
-        graph.setLayout(Graph.TB);
+        graph.setLayout(direction);
 
         // nodes
         Node nginxNode = Node.getNginxNodeInstance("nginx") ;
