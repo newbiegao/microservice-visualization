@@ -11,12 +11,12 @@
     </appender>
 
     <!-- LOG everything at INFO level -->
-    <root level="warn">
+    <root level="info">
         <appender-ref ref="Console" />
     </root>
 
     <!-- LOG "com.baeldung*" at TRACE level  -->
-    <logger name="org.springframework" level="warn" additivity="false">
+    <logger name="org.springframework" level="info" additivity="false">
         <appender-ref ref="Console" />
     </logger>
 
