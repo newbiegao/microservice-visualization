@@ -9,6 +9,18 @@
 <body>
 
 <div>
+
+    <span>中心部门:
+        <select id="dept_id" >
+            <option value="1" >直销业务中心</option>
+            <option value="2" >会员运营中心</option>
+            <option value="3" >大数据部门</option>
+            <option value="4" >旅游业务中心</option>
+            <option value="5" >中间件部门</option>
+            <option value="6" >运维部门</option>
+        </select>
+    </span>
+
     <span>图形类型:
         <select id="chart_type" >
             <option value="sub" >分组展示</option>
@@ -22,7 +34,9 @@
             <option value="LR" >横向</option>
         </select>
     </span>
+
     <input id="btn_load_chart" type="button" value="加载架构图" >
+    <input id="btn_load_dept" type="button" value="部门架构图" >
 </div>
 <div class="mermaid"></div>
 <script src="/js/mermaid.min.js"></script>
@@ -52,6 +66,21 @@
         element.innerHTML = svgCode ;
     };
 
+    // load dept chart
+    function loadDeptChart(){
+         var direction = $("#chart_direction").val() ;
+         var deptId = $("#dept_id").val() ;
+         var request = $.ajax({ url: "/chart/dept/"+deptId+"/"+direction,  method: "GET", dataType: "text"  });
+         request.done(function(text){
+            mermaid.mermaidAPI.render('mermaid', text , insertSvg);
+         }) ;
+
+         request.fail(function(){
+            alert("请求作图数据失败");
+         });
+    }
+
+    // load sample chart
     function loadChart(){
          var direction = $("#chart_direction").val() ;
          var charts = $("#chart_type").val() ;
@@ -101,6 +130,12 @@
      $("#btn_load_chart").click(function(){
             loadChart() ;
      });
+
+     $("#btn_load_dept").click(function(){
+            loadDeptChart() ;
+     });
+
+
 
 </script>
 </body>
