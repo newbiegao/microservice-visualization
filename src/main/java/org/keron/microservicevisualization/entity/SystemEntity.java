@@ -1,5 +1,7 @@
 package org.keron.microservicevisualization.entity;
 
+import org.keron.microservicevisualization.model.flowcharts.Node;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -7,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "T_SYSTEM")
-public class SystemEntity {
+public class SystemEntity implements NodeProcessInterface {
 
     @Id
     @Column(name = "SYS_ID")
@@ -74,5 +76,11 @@ public class SystemEntity {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public Node initNode() {
+        // TODO :
+        return null;
     }
 }
