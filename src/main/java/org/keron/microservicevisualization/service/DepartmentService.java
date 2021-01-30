@@ -40,4 +40,20 @@ public class DepartmentService {
         return departmentEntity ;
     }
 
+    /**
+     *
+     * @return
+     */
+    public List<DepartmentEntity> loadAllDepartmentEntityAndProducts(){
+
+        List<DepartmentEntity> departmentEntityList = departmentRepository.loadAllDepartment() ;
+
+        // load products
+        for( DepartmentEntity departmentEntity : departmentEntityList ){
+            departmentEntity.getProductEntityList().addAll(productRepository.loadProductEntityByDeptId(departmentEntity.getId())) ;
+        }
+
+        return departmentEntityList ;
+    }
+
 }

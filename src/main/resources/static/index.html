@@ -12,12 +12,7 @@
 
     <span>中心部门:
         <select id="dept_id" >
-            <option value="1" >直销业务中心</option>
-            <option value="2" >会员运营中心</option>
-            <option value="3" >大数据部门</option>
-            <option value="4" >旅游业务中心</option>
-            <option value="5" >中间件部门</option>
-            <option value="6" >运维部门</option>
+            <option value="-1" >所有中心</option>
         </select>
     </span>
 
@@ -59,6 +54,14 @@
     // page init
     $(function(){
         loadChart() ;
+        loadDeptList() ;
+        $("#btn_load_chart").click(function(){
+            loadChart() ;
+        });
+
+        $("#btn_load_dept").click(function(){
+                loadDeptChart() ;
+        });
     });
 
     var element = document.querySelector("#mermaid") ;
@@ -127,14 +130,15 @@
          });
     }
 
-     $("#btn_load_chart").click(function(){
-            loadChart() ;
-     });
+    function loadDeptList(){
+        var srvReq = $.ajax({ url: "/data/depts",  method: "GET", dataType: "json"  });
+        srvReq.done(function(dataJson){
+            for( var i=0 ; i<dataJson.length ; i++ ){
 
-     $("#btn_load_dept").click(function(){
-            loadDeptChart() ;
-     });
-
+                $("#dept_id").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
+            }
+         }) ;
+    }
 
 
 </script>

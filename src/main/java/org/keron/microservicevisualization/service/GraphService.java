@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class GraphService {
 
@@ -16,19 +18,44 @@ public class GraphService {
     @Autowired
     private DepartmentService departmentService ;
 
-    public String loadDepartmentProductChart( Integer deptId ){
+    /**
+     *
+     * @param deptId
+     * @return
+     */
+    public String loadDepartmentProductChart( Integer deptId , String direction ){
 
         DepartmentEntity departmentEntity = departmentService.loadDepartmentEntityAndProducts(deptId) ;
 
         // create charts
         FlowchartsBuilder builder = new FlowchartsBuilder() ;
         Graph graph = new Graph() ;
-        graph.setLayout(Graph.TB);
+        graph.setLayout(direction);
         graph.addNode(departmentEntity.initNode());
         String text = builder.build(graph) ;
 
         logger.debug("node text : {}" , text);
         return text ;
+
+    }
+
+    /**
+     *
+     * @return
+     */
+    public String loadAllDepartmentProductChart( String direction ){
+
+        List<DepartmentEntity> departmentEntityList = departmentService.loadAllDepartmentEntityAndProducts() ;
+
+        FlowchartsBuilder builder = new FlowchartsBuilder() ;
+        Graph graph = new Graph() ;
+        graph.setLayout(direction);
+
+        for( DepartmentEntity departmentEntity : departmentEntityList ){
+            graph.addNode(departmentEntity.initNode());
+        }
+
+        return builder.build(graph) ;
 
     }
 
