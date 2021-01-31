@@ -2,14 +2,13 @@ package org.keron.microservicevisualization.entity;
 
 import org.keron.microservicevisualization.model.flowcharts.Node;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "T_SYSTEM")
 public class SystemEntity implements NodeProcessInterface {
+
+    private static final String NODE_PREFIX = "SYS" ;
 
     @Id
     @Column(name = "SYS_ID")
@@ -29,6 +28,9 @@ public class SystemEntity implements NodeProcessInterface {
 
     @Column(name = "SYS_TYPE")
     private String  type   ;
+
+    @Transient
+    private Node node ;
 
     public Integer getId() {
         return id;
@@ -80,7 +82,40 @@ public class SystemEntity implements NodeProcessInterface {
 
     @Override
     public Node initNode() {
-        // TODO :
-        return null;
+
+        if( this.getType().equalsIgnoreCase("database") ){
+            this.node = Node.getDataBaseInstance(String.valueOf(this.getId())) ;
+        }
+        if( this.getType().equalsIgnoreCase("app") ){
+            this.node = Node.getAppNodeInstance(String.valueOf(this.getId())) ;
+        }
+        if( this.getType().equalsIgnoreCase("nginx") ){
+            this.node = Node.getNginxNodeInstance(String.valueOf(this.getId())) ;
+        }
+        if( this.getType().equalsIgnoreCase("mq") ){
+            this.node = Node.getMQNodeInstance(String.valueOf(this.getId())) ;
+        }
+        if( this.getType().equalsIgnoreCase("outer") ){
+            this.node = Node.getOuterNodeInstance(String.valueOf(this.getId())) ;
+        }
+        if( this.getType().equalsIgnoreCase("redis") ){
+            this.node = Node.getRedisNodeInstance(String.valueOf(this.getId())) ;
+        }
+        if( this.getType().equalsIgnoreCase("user") ){
+            this.node = Node.getUserNodeInstance(String.valueOf(this.getId())) ;
+        }
+        if( this.getType().equalsIgnoreCase("h5") ){
+            this.node = Node.getFrontH5Instance(String.valueOf(this.getId())) ;
+        }
+        if( this.getType().equalsIgnoreCase("app") ){
+            this.node = Node.getFrontAppInstance(String.valueOf(this.getId())) ;
+        }
+
+        // set node property
+        this.node.setId(NODE_PREFIX+this.id);
+        this.node.setTitle(this.name);
+        this.node.setCount(this.count);
+
+        return this.node ;
     }
 }

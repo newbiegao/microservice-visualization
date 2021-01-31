@@ -88,4 +88,8 @@ public abstract class Node implements Charts {
     public static Node getOuterNodeInstance( String id ) { return new OuterNode(id) ; }
 
     public static Node getSubgraphInstance( String id ) { return new Subgraph(id) ; }
+
+    public static Node getFrontAppInstance( String id ) { return new FrontAppNode(id) ; }
+
+    public static Node getFrontH5Instance( String id ) { return new FrontH5Node(id) ; }
 }

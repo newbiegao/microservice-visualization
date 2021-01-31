@@ -10,7 +10,7 @@ import java.util.List;
 @Table(name = "T_PRODUCT")
 public class ProductEntity implements NodeProcessInterface {
 
-    private static final String NODEID_PREFIX = "PRO" ;
+    private static final String NODE_PREFIX = "PRO" ;
 
     @Id
     @Column(name = "PRO_ID")
@@ -67,7 +67,7 @@ public class ProductEntity implements NodeProcessInterface {
         this.node = (Subgraph)Node.getSubgraphInstance(String.valueOf(this.id)) ;
 
         // set node property
-        this.node.setId(NODEID_PREFIX+this.id);
+        this.node.setId(NODE_PREFIX+this.id);
         this.node.setTitle(this.name);
 
         // add child Node
