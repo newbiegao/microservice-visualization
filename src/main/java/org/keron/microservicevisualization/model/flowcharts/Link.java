@@ -1,6 +1,6 @@
 package org.keron.microservicevisualization.model.flowcharts;
 
-public class Link implements Charts {
+public class Link extends Node {
 
     public Link( String  formNodeId , String  toNodeId){
         this.formNodeId = formNodeId ;
@@ -23,6 +23,11 @@ public class Link implements Charts {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    @Override
+    public String processNodeTextExt(String nodeText) {
+        return nodeText ;
     }
 
 
