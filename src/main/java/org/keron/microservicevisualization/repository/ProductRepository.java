@@ -13,6 +13,9 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<ProductEntity , Integer> {
 
     @Query(" from ProductEntity p where p.deptId = :deptId ")
-    public List<ProductEntity> loadProductEntityByDeptId( @Param("deptId") Integer deptId ) ;
+    List<ProductEntity> loadProductEntityListByDeptId( @Param("deptId") Integer deptId ) ;
+
+    @Query(" from ProductEntity p where p.id = :id ")
+    ProductEntity loadProductEntityById( @Param("id") Integer id ) ;
 
 }

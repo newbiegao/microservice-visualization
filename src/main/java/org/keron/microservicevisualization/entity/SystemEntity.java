@@ -86,7 +86,7 @@ public class SystemEntity implements NodeProcessInterface {
         if( this.getType().equalsIgnoreCase("database") ){
             this.node = Node.getDataBaseInstance(String.valueOf(this.getId())) ;
         }
-        if( this.getType().equalsIgnoreCase("app") ){
+        if( this.getType().equalsIgnoreCase("api") ){
             this.node = Node.getAppNodeInstance(String.valueOf(this.getId())) ;
         }
         if( this.getType().equalsIgnoreCase("nginx") ){
@@ -113,7 +113,7 @@ public class SystemEntity implements NodeProcessInterface {
 
         // set node property
         this.node.setId(NODE_PREFIX+this.id);
-        this.node.setTitle(this.name);
+        this.node.setTitle(this.title);
         this.node.setCount(this.count);
 
         return this.node ;

@@ -1,8 +1,10 @@
 package org.keron.microservicevisualization.service;
 
 import org.keron.microservicevisualization.entity.DepartmentEntity;
+import org.keron.microservicevisualization.entity.ProductEntity;
 import org.keron.microservicevisualization.repository.DepartmentRepository;
 import org.keron.microservicevisualization.repository.ProductRepository;
+import org.keron.microservicevisualization.repository.SystemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,9 @@ public class DepartmentService {
 
     @Autowired
     private ProductRepository productRepository ;
+
+    @Autowired
+    private SystemRepository systemRepository ;
 
     /**
      *
@@ -35,7 +40,11 @@ public class DepartmentService {
         DepartmentEntity departmentEntity =  departmentRepository.loadDepartmentEntity(deptId) ;
 
         // load products
-        departmentEntity.getProductEntityList().addAll(productRepository.loadProductEntityByDeptId(deptId)) ;
+        List<ProductEntity> productEntityList = productRepository.loadProductEntityListByDeptId(departmentEntity.getId()) ;
+        for( ProductEntity productEntity :  productEntityList) {
+            productEntity.getSystemEntityList().addAll(systemRepository.loadSystemEntityListByProId(productEntity.getId())) ;
+        }
+        departmentEntity.getProductEntityList().addAll(productEntityList) ;
 
         return departmentEntity ;
     }
@@ -50,7 +59,8 @@ public class DepartmentService {
 
         // load products
         for( DepartmentEntity departmentEntity : departmentEntityList ){
-            departmentEntity.getProductEntityList().addAll(productRepository.loadProductEntityByDeptId(departmentEntity.getId())) ;
+            List<ProductEntity> productEntityList = productRepository.loadProductEntityListByDeptId(departmentEntity.getId()) ;
+            departmentEntity.getProductEntityList().addAll(productEntityList) ;
         }
 
         return departmentEntityList ;

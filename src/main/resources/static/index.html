@@ -112,15 +112,15 @@
         floatHeight: 100
     }
 
+    // show pop detail window
     function show(event , id){
-
         // load data
-        var srvReq = $.ajax({ url: "/server/"+id ,  method: "GET", dataType: "json"  });
+        var srvReq = $.ajax({ url: "/chart/system/"+id ,  method: "GET", dataType: "json"  });
          srvReq.done(function(dataJson){
 
                panelConfig.header.content = dataJson.title ;
-               panelConfig.body.content = dataJson.descripte ;
-               panelConfig.footer.content = dataJson.name ;
+               panelConfig.body.content = dataJson.title ;
+               panelConfig.footer.content = '[实例数]: ' +  dataJson.count ;
                panel2.set(panelConfig);
                panel2.show(event) ;
          }) ;
@@ -139,7 +139,6 @@
             }
          }) ;
     }
-
 
 </script>
 </body>
