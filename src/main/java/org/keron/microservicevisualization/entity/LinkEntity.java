@@ -51,6 +51,13 @@ public class LinkEntity implements NodeProcessInterface {
         this.toId = toId;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     @Override
     public Node initNode() {
