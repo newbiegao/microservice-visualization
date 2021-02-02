@@ -25,7 +25,7 @@ public class LinkService {
     public List<LinkEntity> loadLinkEntitys(List<Integer> nodeIds ){
 
         List<LinkEntity> fromList = new ArrayList<>() ;
-        if( nodeIds.isEmpty() ) return fromList ;
+        if( nodeIds.isEmpty() ) { return fromList ; }
         fromList = linkRepository.loadFromLinks(nodeIds) ;
 
         // find toIds in fromIds
