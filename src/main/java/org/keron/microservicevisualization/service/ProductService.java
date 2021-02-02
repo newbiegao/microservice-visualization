@@ -33,4 +33,13 @@ public class ProductService {
         return productEntity ;
     }
 
+    /**
+     *
+     * @param deptId
+     * @return
+     */
+    public List<ProductEntity> loadProductEntityListByDeptId( Integer deptId ){
+        return productRepository.loadProductEntityListByDeptId(deptId) ;
+    }
+
 }

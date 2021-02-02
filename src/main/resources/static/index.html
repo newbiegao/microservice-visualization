@@ -16,6 +16,12 @@
         </select>
     </span>
 
+    <span>产品列表:
+        <select id="pro_id" >
+            <option value="-1" >所有产品</option>
+        </select>
+    </span>
+
     <span>图形类型:
         <select id="chart_type" >
             <option value="sub" >分组展示</option>
@@ -60,8 +66,13 @@
         });
 
         $("#btn_load_dept").click(function(){
-                loadDeptChart() ;
+            loadDeptChart() ;
         });
+
+        $("#dept_id").change(function(){
+            loadProList() ;
+        });
+
     });
 
     var element = document.querySelector("#mermaid") ;
@@ -71,9 +82,13 @@
 
     // load dept chart
     function loadDeptChart(){
-         var direction = $("#chart_direction").val() ;
-         var deptId = $("#dept_id").val() ;
-         var request = $.ajax({ url: "/chart/dept/"+deptId+"/"+direction,  method: "GET", dataType: "text"  });
+         var postData = {
+            deptId : $("#dept_id").val() ,
+            proId : $("#pro_id").val() ,
+            direction : $("#chart_direction").val()
+         }
+
+         var request = $.ajax({ url: "/chart/dept" , data: postData , method: "POST", dataType: "text"  });
          request.done(function(text){
             mermaid.mermaidAPI.render('mermaid', text , insertSvg);
          }) ;
@@ -130,14 +145,27 @@
          });
     }
 
+    // load all dept list
     function loadDeptList(){
         var srvReq = $.ajax({ url: "/data/depts",  method: "GET", dataType: "json"  });
         srvReq.done(function(dataJson){
             for( var i=0 ; i<dataJson.length ; i++ ){
-
                 $("#dept_id").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
             }
          }) ;
+    }
+
+    // load product list by deptId
+    function loadProList(){
+       var deptId = $("#dept_id").val() ;
+       var srvReq = $.ajax({ url: "/data/pros/"+deptId,  method: "GET", dataType: "json"  });
+       srvReq.done(function(dataJson){
+            $("#pro_id").empty() ;
+             $("#pro_id").append("<option value='-1'>所有产品</option>")
+            for( var i=0 ; i<dataJson.length ; i++ ){
+                $("#pro_id").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
+            }
+        }) ;
     }
 
 </script>

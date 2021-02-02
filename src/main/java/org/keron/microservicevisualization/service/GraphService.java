@@ -2,6 +2,8 @@ package org.keron.microservicevisualization.service;
 
 import org.keron.microservicevisualization.FlowchartsBuilder;
 import org.keron.microservicevisualization.entity.DepartmentEntity;
+import org.keron.microservicevisualization.entity.ProductEntity;
+import org.keron.microservicevisualization.entity.SystemEntity;
 import org.keron.microservicevisualization.model.flowcharts.Graph;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +19,9 @@ public class GraphService {
 
     @Autowired
     private DepartmentService departmentService ;
+
+    @Autowired
+    private ProductService productService ;
 
     /**
      *
@@ -54,9 +59,27 @@ public class GraphService {
         for( DepartmentEntity departmentEntity : departmentEntityList ){
             graph.addNode(departmentEntity.initNode());
         }
-
         return builder.build(graph) ;
+    }
 
+    /**
+     *
+     * @param proId
+     * @param direction
+     * @return
+     */
+    public String loadProductAndSystemChart( Integer proId , String direction ){
+
+        ProductEntity productEntity =  productService.loadProductEntityAndSystemEntity(proId) ;
+
+        FlowchartsBuilder builder = new FlowchartsBuilder() ;
+        Graph graph = new Graph() ;
+        graph.setLayout(direction);
+
+        for(SystemEntity systemEntity : productEntity.getSystemEntityList()){
+            graph.addNode(systemEntity.initNode());
+        }
+        return builder.build(graph) ;
     }
 
 }
