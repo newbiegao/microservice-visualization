@@ -17,9 +17,16 @@ public class LinkService {
     @Autowired
     private LinkRepository linkRepository ;
 
-    public List<LinkEntity> loadLinks(List<Integer> nodeIds ){
+    /**
+     *
+     * @param nodeIds
+     * @return
+     */
+    public List<LinkEntity> loadLinkEntitys(List<Integer> nodeIds ){
 
-        List<LinkEntity> fromList = linkRepository.loadFromLinks(nodeIds) ;
+        List<LinkEntity> fromList = new ArrayList<>() ;
+        if( nodeIds.isEmpty() ) return fromList ;
+        fromList = linkRepository.loadFromLinks(nodeIds) ;
 
         // find toIds in fromIds
         List<LinkEntity> newFromList = new ArrayList<>() ;
@@ -28,9 +35,7 @@ public class LinkService {
                newFromList.add( from ) ;
            }
         }
-
         return  newFromList ;
-
     }
 
 }

@@ -26,11 +26,13 @@ public class LinkServiceTest {
     public void loadLinksTest(){
 
         List<Integer> nodeIds = new ArrayList<>() ;
-        nodeIds.add(1) ;
-        nodeIds.add(2) ;
-        nodeIds.add(3) ;
+        nodeIds.add(69) ;
+        nodeIds.add(70) ;
+        nodeIds.add(71) ;
+        nodeIds.add(72) ;
+        nodeIds.add(73) ;
 
-        List<LinkEntity> linkEntityList = linkService.loadLinks(nodeIds ) ;
+        List<LinkEntity> linkEntityList = linkService.loadLinkEntitys(nodeIds ) ;
 
         for( LinkEntity linkEntity : linkEntityList ){
             logger.debug("link : " + linkEntity.getTitle());
