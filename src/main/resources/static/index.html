@@ -84,6 +84,7 @@
 
 <script type="text/javascript" >
 
+
     // page init
     $(function(){
        initLeftBar() ;
@@ -107,7 +108,7 @@
             proId : $("#pro_id").val() ,
             direction : $("#chart_direction").val()
        }
-       myiframe.window.loadDeptChart(postData);
+       $("#myiframe")[0].contentWindow.loadDeptChart(postData) ;
     }
 
     function doLoadChart(){
@@ -115,7 +116,7 @@
             direction : $("#chart_direction").val() ,
             charts : $("#chart_type").val()
         }
-        myiframe.window.loadChart(data) ;
+        $("#myiframe")[0].contentWindow.loadChart(data) ;
     }
 
     // load all dept list
