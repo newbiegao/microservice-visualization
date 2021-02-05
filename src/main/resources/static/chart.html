@@ -9,6 +9,7 @@
 <body>
 
 <div>
+        <!--
         <span>中心部门:
             <select id="dept_id" >
                 <option value="-1" >所有中心</option>
@@ -28,7 +29,7 @@
             </select>
         </span>
 
-            <span>图形方向:
+        <span>图形方向:
             <select id="chart_direction" >
                 <option value="TB" >纵向</option>
                 <option value="LR" >横向</option>
@@ -37,6 +38,7 @@
 
         <input id="btn_load_chart" type="button" value="加载架构图" >
         <input id="btn_load_dept" type="button" value="部门架构图" >
+        -->
 </div>
 
 <div id="merma_id" class="mermaid"></div>
@@ -45,7 +47,8 @@
 <script src="/js/jquery-3.5.1.min.js"></script>
 <script src="/js/floatPanel.min.js"></script>
 
-<script>
+<script type="text/javascript" >
+
     // mermaid init config
     mermaid.initialize({
         startOnLoad: false ,
@@ -57,37 +60,13 @@
         }
     });
 
-    // page init
-    $(function(){
-        loadChart() ;
-        loadDeptList() ;
-        $("#btn_load_chart").click(function(){
-            loadChart() ;
-        });
-
-        $("#btn_load_dept").click(function(){
-            loadDeptChart() ;
-        });
-
-        $("#dept_id").change(function(){
-            loadProList() ;
-        });
-
-    });
-
     var element = document.getElementById("mermaid") ;
     var insertSvg = function(svgCode){
-       //  element.innerHTML = svgCode ;
         $("#merma_id").html(svgCode);
     };
 
     // load dept chart
-    function loadDeptChart(){
-         var postData = {
-            deptId : $("#dept_id").val() ,
-            proId : $("#pro_id").val() ,
-            direction : $("#chart_direction").val()
-         }
+    function loadDeptChart(postData){
 
          var request = $.ajax({ url: "/chart/dept" , data: postData , method: "POST", dataType: "text"  });
          request.done(function(text){
@@ -100,10 +79,8 @@
     }
 
     // load sample chart
-    function loadChart(){
-         var direction = $("#chart_direction").val() ;
-         var charts = $("#chart_type").val() ;
-         var request = $.ajax({ url: "/chart/"+charts+"/"+direction,  method: "GET", dataType: "text"  });
+    function loadChart(data){
+         var request = $.ajax({ url: "/chart", data , method: "POST", dataType: "text"  });
          request.done(function(text){
             mermaid.mermaidAPI.render('mermaid', text , insertSvg);
          }) ;
@@ -144,29 +121,6 @@
          srvReq.fail(function(){
             alert("请求服务信息失败");
          });
-    }
-
-    // load all dept list
-    function loadDeptList(){
-        var srvReq = $.ajax({ url: "/data/depts",  method: "GET", dataType: "json"  });
-        srvReq.done(function(dataJson){
-            for( var i=0 ; i<dataJson.length ; i++ ){
-                $("#dept_id").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
-            }
-         }) ;
-    }
-
-    // load product list by deptId
-    function loadProList(){
-       var deptId = $("#dept_id").val() ;
-       var srvReq = $.ajax({ url: "/data/pros/"+deptId,  method: "GET", dataType: "json"  });
-       srvReq.done(function(dataJson){
-            $("#pro_id").empty() ;
-             $("#pro_id").append("<option value='-1'>所有产品</option>")
-            for( var i=0 ; i<dataJson.length ; i++ ){
-                $("#pro_id").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
-            }
-        }) ;
     }
 
 </script>

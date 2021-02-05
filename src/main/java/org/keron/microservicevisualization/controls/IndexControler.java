@@ -3,23 +3,20 @@ package org.keron.microservicevisualization.controls;
 import org.keron.microservicevisualization.FlowchartsBuilder;
 import org.keron.microservicevisualization.model.data.ServerInfo;
 import org.keron.microservicevisualization.model.flowcharts.*;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 
 @RestController
 public class IndexControler {
 
-    @GetMapping("/chart/{id}/{direction}")
-    public String loadChartText( @PathVariable String id , @PathVariable String direction ){
+    @PostMapping("/chart")
+    public String loadChartText( @RequestParam("charts") String charts , @RequestParam("direction") String direction ){
 
-        if( id.equalsIgnoreCase("sub") ){
+        if( charts.equalsIgnoreCase("sub") ){
             return loadsubgraphTest(direction) ;
         }
-        else if( id.equalsIgnoreCase("tree") ){
+        else if( charts.equalsIgnoreCase("tree") ){
             return laodTreeNodeTest(direction) ;
         }
 

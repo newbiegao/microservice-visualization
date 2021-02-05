@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/.java-version
+/h2/app_db.trace.db

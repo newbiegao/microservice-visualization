@@ -42,14 +42,39 @@
             <button type="button" class="btn btn-primary btn-sm hiddenBtn" style="line-height: 10px;" @click="isShowLeft">
                 <i class="bx bx-grid-alt" style="font-size: 16px;"></i>
             </button>
-            <span>123</span>
-            <span>123</span>
-            <span>123</span>
-            <span>123</span>
+            <span>中心部门:
+                <select id="dept_id" >
+                    <option value="-1" >所有中心</option>
+                </select>
+           </span>
+
+            <span>产品列表:
+                <select id="pro_id" >
+                    <option value="-1" >所有产品</option>
+                </select>
+            </span>
+
+            <span>图形方向:
+                <select id="chart_direction" >
+                    <option value="TB" >纵向</option>
+                    <option value="LR" >横向</option>
+                </select>
+            </span>
+
+            <span>图形类型:
+                <select id="chart_type" >
+                    <option value="sub" >分组展示</option>
+                    <option value="tree" >树形结构</option>
+                </select>
+            </span>
+
+            <input id="btn_load_chart" type="button" value="加载架构图" >
+            <input id="btn_load_dept" type="button" value="部门架构图" >
+
         </div>
 
         <div class="content-page" ref="cPage">
-            <iframe name="iframe" width="100%" height="1024px" frameborder="0" src="/chart.html"></iframe>
+            <iframe id="myiframe" name="myiframe" width="100%" height="1024px" frameborder="0" src="/chart.html"></iframe>
         </div>
     </div>
 </div>
@@ -57,11 +82,64 @@
 <script src="/js/jquery-3.5.1.min.js"></script>
 <script src="/js/vue.min.js"></script>
 
-<script>
+<script type="text/javascript" >
+
     // page init
     $(function(){
        initLeftBar() ;
+       loadDeptList() ;
+       $("#dept_id").change(function(){
+            loadProList() ;
+       });
+
+       $("#btn_load_dept").click(function(){
+            doLoadDeptChart() ;
+       });
+
+       $("#btn_load_chart").click(function(){
+            doLoadChart() ;
+       });
     });
+
+    function doLoadDeptChart(){
+       var postData = {
+            deptId : $("#dept_id").val() ,
+            proId : $("#pro_id").val() ,
+            direction : $("#chart_direction").val()
+       }
+       myiframe.window.loadDeptChart(postData);
+    }
+
+    function doLoadChart(){
+        var data = {
+            direction : $("#chart_direction").val() ,
+            charts : $("#chart_type").val()
+        }
+        myiframe.window.loadChart(data) ;
+    }
+
+    // load all dept list
+    function loadDeptList(){
+        var srvReq = $.ajax({ url: "/data/depts",  method: "GET", dataType: "json"  });
+        srvReq.done(function(dataJson){
+            for( var i=0 ; i<dataJson.length ; i++ ){
+                $("#dept_id").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
+            }
+         }) ;
+    }
+
+    // load product list by deptId
+    function loadProList(){
+       var deptId = $("#dept_id").val() ;
+       var srvReq = $.ajax({ url: "/data/pros/"+deptId,  method: "GET", dataType: "json"  });
+       srvReq.done(function(dataJson){
+            $("#pro_id").empty() ;
+             $("#pro_id").append("<option value='-1'>所有产品</option>")
+            for( var i=0 ; i<dataJson.length ; i++ ){
+                $("#pro_id").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
+            }
+        }) ;
+    }
 
     // init left bar
     function initLeftBar(){
@@ -98,32 +176,24 @@
     }
 
     const vue = new Vue({
-				el: '#app',
-				data: {
-					navLeftFlag: true
-				},
-				methods: {
-					isShowLeft() {
-						if (this.navLeftFlag ) {
-							this.$refs.navRight.style.paddingLeft = '0px'
-							this.$refs.cPage.style.left = '0px';
-							this.navLeftFlag = false;
-							// this.$refs.navLeft.style.width = '0px';
-							// setTimeout(()=>{
-							// 	this.navLeftFlag = false;
-							// },200)
-						} else {
-							this.$refs.navRight.style.paddingLeft = '240px';
-							this.$refs.cPage.style.left = '240px';
-							this.navLeftFlag = true;
-							// this.$refs.navLeft.style.width = '240px';
-							// setTimeout(()=>{
-							// 	this.navLeftFlag = true;
-							// },200)
-						}
-					}
-				}
-			})
+        el: '#app',
+        data: {
+            navLeftFlag: true
+        },
+        methods: {
+            isShowLeft() {
+                if (this.navLeftFlag ) {
+                    this.$refs.navRight.style.paddingLeft = '0px'
+                    this.$refs.cPage.style.left = '0px';
+                    this.navLeftFlag = false;
+                } else {
+                    this.$refs.navRight.style.paddingLeft = '240px';
+                    this.$refs.cPage.style.left = '240px';
+                    this.navLeftFlag = true;
+                }
+            }
+        }
+	})
 
 </script>
 </body>
