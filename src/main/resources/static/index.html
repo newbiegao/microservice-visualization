@@ -21,15 +21,15 @@
             <div class="nav-list">
                 <ul>
                     <li class="nav-tab a_active waves-effect">
-                        <a href="/chart.html" class="li-a active" target="iframe"><i class='bx bx-home-smile'></i> 主页
+                        <a href="/chart.html" class="li-a active" target="myiframe"><i class='bx bx-home-smile'></i> 主页
                             <span class="badge badge-pill badge-primary float-right">1</span>
                         </a>
                     </li>
                     <li class="nav-tab nav-ul">
-                        <a href="javascript:void[0]" class="li-a" target="iframe"><i class='bx bx-layer'></i> 架构管理
+                        <a href="javascript:void[0]" class="li-a" target="myiframe"><i class='bx bx-layer'></i> 架构管理
                             <i class='bx bx-chevron-right' style="float: right;"></i></a>
                         <div class="nav-box">
-                            <a href="html/device/2-1.html" class="li-a-a" target="iframe">架构编辑</a>
+                            <a href="html/device/2-1.html" class="li-a-a" target="myiframe">架构编辑</a>
                         </div>
                     </li>
                 </ul>
@@ -148,14 +148,12 @@
 				$('.nav-tab').click(function() {
 					$(this).siblings().each(function() {
 						$(this).removeClass('a_active');
-						// $(this).removeClass('a_active');
 						$(this).find('.nav-box').css('height', '0')
 						//关闭右侧箭头
 						if ($(this).attr('class').indexOf('nav-ul') != -1) {
 							$(this).find('.bx-chevron-right').css('transform', 'rotateZ(0deg)')
 							$(this).find('.bx-chevron-right').css('transition', 'all .5s')
 							$(this).removeClass('nav-show')
-							// $(this).find('div').removeClass('nav-box')
 						}
 					})
 					//当前选中
@@ -165,7 +163,6 @@
 					$(this).find('.bx-chevron-right').css('transform', 'rotateZ(90deg)')
 					$(this).find('.bx-chevron-right').css('transition', 'all .5s')
 					$(this).addClass('nav-show')
-					// $(this).find('div').addClass('nav-box')
 				})
 				/* 二级菜单a点击事件 */
 				$(".li-a-a").click(function() {
