@@ -22,3 +22,6 @@ spring.jpa.properties.hibernate.format_sql: true
 # H2 config
 spring.h2.console.enabled: true
 # spring.h2.console.path: /h2-console
+
+## app config
+micro.vis.index : forward:app-index.html
