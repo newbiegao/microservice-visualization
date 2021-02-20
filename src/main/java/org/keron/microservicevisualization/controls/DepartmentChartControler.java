@@ -43,12 +43,27 @@ public class DepartmentChartControler {
 
     }
 
-
     @GetMapping("/data/depts")
     public List<DepartmentEntity> loadDeptList(){
-
         return  departmentService.loadAllDepartments() ;
+    }
 
+    @PostMapping("/data/dept/save")
+    public DepartmentEntity saveDept( Integer deptId , String deptName ){
+
+        DepartmentEntity departmentEntity = departmentService.saveDept(deptId , deptName);
+        return departmentEntity ;
+    }
+
+
+    @PostMapping("/data/dept/delete")
+    public Boolean deleteDept(Integer deptId){
+        return departmentService.deleteDept(deptId) ;
+    }
+
+    @GetMapping("/data/dept/{deptId}")
+    public DepartmentEntity loadDepartmentEntity(@PathVariable("deptId") Integer deptId ){
+        return departmentService.loadDepartment(deptId) ;
     }
 
 }

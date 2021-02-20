@@ -75,19 +75,17 @@
                         </div>
                     </div>
                 </div>
-
                 <div class="col-sm-8">
                     <div class="page-header float-right">
                         <div class="page-title">
                             <ol class="breadcrumb text-right">
-                                <li >
-                                    <a id="btn_id_add_product" type="button" class="btn btn-primary" href="/product-edit.html" >新增产品</a>
-                                </li>
+                                <li><a id="a_toolbar_pro" href="/product-list.html">产品管理</a></li>
+                                <li><a id="a_toolbar_pro_list" href="/product-list.html">产品列表</a></li>
+                                <li class="active">编辑产品</li>
                             </ol>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -98,25 +96,36 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <label>部门列表:</label>
-                            <select id="dept_id" ></select>
+                            <strong class="card-title">&nbsp;</strong>
                         </div>
-                        <div class="table-stats order-table ov-h">
-                            <table class="table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="id_pro_List" >
-                                    <tr id="id_pro_row" >
-                                        <td> <span class="id"></span> </td>
-                                        <td> <a class="name"></a> </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div> <!-- /.table-stats -->
+                        <div class="card-body">
+                            <!-- Credit Card -->
+                            <div id="pay-invoice">
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        <h3 class="text-center">编辑产品</h3>
+                                    </div>
+                                    <hr>
+                                    <form id="proForm" method="post" novalidate="novalidate">
+
+                                        <div class="form-group">
+                                            <label for="form_pro_id" class="control-label mb-1">产品ID</label>
+                                            <input id="form_pro_id" name="proId" type="text" class="form-control" aria-required="true" aria-invalid="false" aria-describedby="部门ID" >
+                                        </div>
+                                        <div class="form-group has-success">
+                                            <label for="form_pro_name" class="control-label mb-1">产品名称</label>
+                                            <input id="form_pro_name" name="proName" type="text" class="form-control" data-val="true"  aria-required="true" aria-invalid="false" aria-describedby="部门名称">
+                                        </div>
+                                        <div>
+                                            <button id="save-pro-button" type="button" class="btn btn-lg btn-info ">保存</button>
+                                            <button id="delete-pro-button" type="button" class="btn btn-lg btn-danger ">删除</button>
+                                        </div>
+                                        <input id="form_dept_id" name="deptId" type="hidden" >
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- Credit Card end -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -168,55 +177,81 @@
 
     // page init
     $(function(){
-        loadDeptList() ;
+       $("#save-pro-button").click(function(){
+            savePro() ;
+       });
+       $("#delete-pro-button").click(function(){
+            deletePro() ;
+       });
 
-        $("#dept_id").change(function(){
-            var deptId = $("#dept_id").val() ;
-            $("#btn_id_add_product").attr("href" , "/product-edit.html?deptId="+deptId);
-            loadProList() ;
-        });
+       // load product info
+       var proId = parseInt(QueryString.GetValue("proId"));
+       if( proId > 0 ){
+          loadPro(proId);
+       }
 
+       // set toolbar url
+       setToolBarUrl() ;
     });
 
-    // set selected dept
-    function setDeptSelect(){
-         var deptId = parseInt(QueryString.GetValue("deptId"));
-          if( deptId > 0 ){
-          $("#dept_id").val(deptId) ;
-       }
+    // set toolbar url
+    function setToolBarUrl(){
+       var deptId = parseInt(QueryString.GetValue("deptId"));
+
+       // set form input
+       $("#form_dept_id").val(deptId);
+
+       // set url
+       $("#a_toolbar_pro_list").attr("href" , "/product-list.html?deptId=" + deptId);
+       $("#a_toolbar_pro").attr("href" , "/product-list.html?deptId=" + deptId);
     }
 
-    // load all dept list
-    function loadDeptList(){
-        var srvReq = $.ajax({ url: "/data/depts",  method: "GET", dataType: "json"  });
+    // load product info
+    function loadPro( proId ){
+        var srvReq = $.ajax({ url: "/data/pro/"+proId ,  method: "GET", dataType: "json"  });
         srvReq.done(function(dataJson){
-            for( var i=0 ; i<dataJson.length ; i++ ){
-                $("#dept_id").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
-            }
-            // set selected dept
-            setDeptSelect();
-            loadProList() ;
-            var deptId = $("#dept_id").val() ;
-            $("#btn_id_add_product").attr("href" , "/product-edit.html?deptId="+deptId);
-         }) ;
+           $("#form_pro_id").val(dataJson.id);
+           $("#form_pro_name").val(dataJson.name);
+           $("#form_dept_id").val(dataJson.deptId);
+        }) ;
     }
 
-    var rowTemplate = $("#id_pro_row").clone() ;
-
-    // load product list
-    function loadProList(){
-       var deptId = $("#dept_id").val() ;
-       var srvReq = $.ajax({ url: "/data/pros/"+deptId,  method: "GET", dataType: "json"  });
-        srvReq.done(function(dataJson){
-            $("#id_pro_List").children("tr").remove() ;
-            for( var i=0 ; i<dataJson.length ; i++ ){
-                var row = rowTemplate.clone() ;
-                row.find(".id").text(dataJson[i].id);
-                row.find(".name").text(dataJson[i].name);
-                row.find(".name").attr("href" , "/product-edit.html?proId="+dataJson[i].id + "&deptId=" + deptId);
-                row.appendTo("#id_pro_List") ;
+    // save product
+    function savePro(){
+        var postData = $("#proForm").serialize();
+        $.ajax({
+            url: "/data/pro/save" ,
+            data: postData ,
+            method: "POST",
+            dataType: "json" ,
+            success: function(data){
+                $(window).attr("location","/product-list.html?deptId="+data.deptId);
+            },
+            error: function(){
+                alert("保存部门失败");
             }
-         }) ;
+        });
+    }
+
+    // delete product
+    function deletePro(){
+        var postData = $("#proForm").serialize();
+        $.ajax({
+            url: "/data/pro/delete" ,
+            data: postData ,
+            method: "POST",
+            dataType: "json" ,
+            success: function(data){
+                if(data){
+                  $(window).attr("location","/product-list.html?deptId=" + $("#form_dept_id").val());
+                } else {
+                  alert("部门包含产品信息不能删除");
+                }
+            },
+            error: function(){
+                alert("删除产品失败");
+            }
+        });
     }
 
 </script>

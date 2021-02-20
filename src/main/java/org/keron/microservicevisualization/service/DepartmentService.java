@@ -35,6 +35,15 @@ public class DepartmentService {
      * @param deptId
      * @return
      */
+    public DepartmentEntity loadDepartment( Integer deptId ){
+        return departmentRepository.loadDepartmentEntity(deptId) ;
+    }
+
+    /**
+     *
+     * @param deptId
+     * @return
+     */
     public DepartmentEntity loadDepartmentEntityAndProducts( Integer deptId ){
 
         DepartmentEntity departmentEntity =  departmentRepository.loadDepartmentEntity(deptId) ;
@@ -64,6 +73,39 @@ public class DepartmentService {
         }
 
         return departmentEntityList ;
+    }
+
+    /**
+     *
+     * @param deptId
+     * @param deptName
+     * @return
+     */
+    public DepartmentEntity saveDept( Integer deptId , String deptName ){
+
+        DepartmentEntity departmentEntity =  departmentRepository.loadDepartmentEntity( deptId ) ;
+        if( departmentEntity == null ) {
+            departmentEntity = new DepartmentEntity() ;
+            departmentEntity.setId(deptId);
+        }
+        departmentEntity.setName(deptName);
+        departmentRepository.saveAndFlush(departmentEntity) ;
+        return departmentEntity ;
+    }
+
+    /**
+     *
+     * @param deptId
+     * @return
+     */
+    public boolean deleteDept( Integer deptId ){
+
+        // check has products
+        if( productRepository.loadDeptProductCounts(deptId) > 0 ){
+            return false ;
+        }
+        departmentRepository.deleteDepartmentEntity(deptId);
+        return true ;
     }
 
 }

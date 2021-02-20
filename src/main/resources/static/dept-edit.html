@@ -24,7 +24,7 @@
                     <a href="app-index.html"><i class="menu-icon fa fa-laptop"></i>系统架构图 </a>
                 </li>
                 <li class="menu-title">基础数据管理</li><!-- /.menu-title -->
-                <li class="menu-item-has-children dropdown">
+                <li class="menu-item-has-children active dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-cogs"></i>部门管理</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="fa fa-table"></i><a href="/dept-list.html">部门列表</a></li>
@@ -36,7 +36,7 @@
                         <li><i class="fa fa-table"></i><a href="/product-list.html">产品列表</a></li>
                     </ul>
                 </li>
-                <li class="menu-item-has-children active dropdown">
+                <li class="menu-item-has-children dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-th"></i>系统管理</a>
                     <ul class="sub-menu children dropdown-menu">
                         <li><i class="menu-icon fa fa-th"></i><a href="/system-list.html">系统列表</a></li>
@@ -71,23 +71,21 @@
                 <div class="col-sm-4">
                     <div class="page-header float-left">
                         <div class="page-title">
-                            <h1>系统管理</h1>
+                            <h1>部门管理</h1>
                         </div>
                     </div>
                 </div>
-
                 <div class="col-sm-8">
                     <div class="page-header float-right">
                         <div class="page-title">
                             <ol class="breadcrumb text-right">
-                                <li >
-                                    <button type="button" class="btn btn-primary">新增系统</button>
-                                </li>
+                                <li><a href="/dept-list.html">部门管理</a></li>
+                                <li><a href="/dept-list.html">部门列表</a></li>
+                                <li class="active">编辑部门</li>
                             </ol>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -98,33 +96,35 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <label>部门列表:</label>
-                            <select id="dept_id" >
-                                <option value="-1" >所有中心</option>
-                            </select>
-
-                            <label>产品列表:</label>
-                            <select id="pro_id" >
-                                <option value="-1" >所有产品</option>
-                            </select>
+                            <strong class="card-title">&nbsp;</strong>
                         </div>
-                        <div class="table-stats order-table ov-h">
-                            <table class="table ">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Name</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="id_deptList" >
-                                    <tr id="id_dept_row" >
+                        <div class="card-body">
+                            <!-- Credit Card -->
+                            <div id="pay-invoice">
+                                <div class="card-body">
+                                    <div class="card-title">
+                                        <h3 class="text-center">编辑部门</h3>
+                                    </div>
+                                    <hr>
+                                    <form id="deptForm" method="post" novalidate="novalidate">
 
-                                        <td> <span class="id"></span> </td>
-                                        <td> <span class="name"></span> </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div> <!-- /.table-stats -->
+                                        <div class="form-group">
+                                            <label for="from_dept_id" class="control-label mb-1">部门ID</label>
+                                            <input id="from_dept_id" name="deptId" type="text" class="form-control" aria-required="true" aria-invalid="false" aria-describedby="部门ID" >
+                                        </div>
+                                        <div class="form-group has-success">
+                                            <label for="form_dept_name" class="control-label mb-1">部门名称</label>
+                                            <input id="form_dept_name" name="deptName" type="text" class="form-control" data-val="true"  aria-required="true" aria-invalid="false" aria-describedby="部门名称">
+                                        </div>
+                                        <div>
+                                            <button id="save-dept-button" type="button" class="btn btn-lg btn-info ">保存</button>
+                                            <button id="delete-dept-button" type="button" class="btn btn-lg btn-danger ">删除</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- Credit Card end -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -156,24 +156,85 @@
 
 <script type="text/javascript" >
 
+    QueryString = {
+        data: {},
+        Initial: function() {
+            var aPairs, aTmp;
+            var queryString = new String(window.location.search);
+            queryString = queryString.substr(1, queryString.length); //remove   "?"
+            aPairs = queryString.split("&");
+            for (var i = 0; i < aPairs.length; i++) {
+                aTmp = aPairs[i].split("=");
+                this.data[aTmp[0]] = aTmp[1];
+            }
+        },
+        GetValue: function(key) {
+            return this.data[key];
+        }
+    }
+    QueryString.Initial();
+
     // page init
     $(function(){
-       loadDeptList() ;
+       $("#save-dept-button").click(function(){
+            saveDept() ;
+       });
+       $("#delete-dept-button").click(function(){
+            deleteDept() ;
+       });
+
+       // load dept info
+       var deptId = parseInt(QueryString.GetValue("deptId"));
+       if( deptId > 0 ){
+          loadDept(deptId);
+       }
     });
 
-    // load all dept list
-    function loadDeptList(){
-        var srvReq = $.ajax({ url: "/data/depts",  method: "GET", dataType: "json"  });
+    // load dept info
+    function loadDept( deptId ){
+        var srvReq = $.ajax({ url: "/data/dept/"+deptId ,  method: "GET", dataType: "json"  });
         srvReq.done(function(dataJson){
-            var rowTemplate = $("#id_dept_row").clone() ;
-            $("#id_dept_row").remove() ;
-            for( var i=0 ; i<dataJson.length ; i++ ){
-                var row = rowTemplate.clone() ;
-                row.find(".id").text(dataJson[i].id);
-                row.find(".name").text(dataJson[i].name);
-                row.appendTo("#id_deptList") ;
+           $("#from_dept_id").val(dataJson.id);
+           $("#form_dept_name").val(dataJson.name);
+        }) ;
+    }
+
+    // save dept
+    function saveDept(){
+        var postData = $("#deptForm").serialize();
+        $.ajax({
+            url: "/data/dept/save" ,
+            data: postData ,
+            method: "POST",
+            dataType: "json" ,
+            success: function(data){
+                $(window).attr("location","/dept-list.html");
+            },
+            error: function(){
+                alert("保存部门失败");
             }
-         }) ;
+        });
+    }
+
+    // delete dept
+    function deleteDept(){
+        var postData = $("#deptForm").serialize();
+        $.ajax({
+            url: "/data/dept/delete" ,
+            data: postData ,
+            method: "POST",
+            dataType: "json" ,
+            success: function(data){
+                if(data){
+                  $(window).attr("location","/dept-list.html");
+                } else {
+                  alert("部门包含产品信息不能删除");
+                }
+            },
+            error: function(){
+                alert("删除部门失败");
+            }
+        });
     }
 
 </script>

@@ -62,4 +62,20 @@ public class DepartmentServiceTest {
         assertThat(departmentEntity.getProductEntityList()).isNotEmpty() ;
         assertThat(departmentEntity.initNode().getNodeText()).isNotEmpty() ;
     }
+
+    @Test
+    public void deleteDeptNot(){
+
+        Integer deptId = 1 ;
+        Boolean isDel = departmentService.deleteDept(deptId) ;
+        assertThat(isDel).isFalse() ;
+    }
+
+    @Test
+    public void deleteDeptYes(){
+
+        Integer deptId = 21 ;
+        Boolean isDel = departmentService.deleteDept(deptId) ;
+        assertThat(isDel).isTrue() ;
+    }
 }

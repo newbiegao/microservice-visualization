@@ -42,4 +42,45 @@ public class ProductService {
         return productRepository.loadProductEntityListByDeptId(deptId) ;
     }
 
+    public ProductEntity saveProductEntity( Integer deptId , Integer proId , String proName ){
+
+        ProductEntity productEntity =  productRepository.loadProductEntityById(proId) ;
+        if( productEntity == null ){
+            productEntity = new ProductEntity() ;
+            productEntity.setId(proId);
+        }
+        productEntity.setDeptId(deptId);
+        productEntity.setName(proName);
+        productRepository.saveAndFlush(productEntity) ;
+        return productEntity  ;
+    }
+
+    public Boolean deletePro( Integer proId ){
+        // check product has system
+        Integer systemCount = systemRepository.loadSystemCount(proId) ;
+        if ( systemCount > 0 ){
+            return false ;
+        }
+        productRepository.deleteById( proId );
+        return true ;
+    }
+
+    /**
+     *
+     * @param deptId
+     * @return
+     */
+    public Integer loadProductCount( Integer deptId ){
+       return  productRepository.loadDeptProductCounts(deptId)  ;
+    }
+
+    /**
+     *
+     * @param proId
+     * @return
+     */
+    public ProductEntity loadProductEntity( Integer proId ){
+        return productRepository.loadProductEntityById(proId) ;
+    }
+
 }

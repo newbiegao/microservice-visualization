@@ -25,4 +25,13 @@ public class ProductServiceTest {
 
     }
 
+    @Test
+    public void loadProductCountTest(){
+
+        Integer deptId = 1 ;
+        Integer proCount = productService.loadProductCount(deptId) ;
+        assertThat(proCount).isGreaterThan(1) ;
+    }
+
+
 }
