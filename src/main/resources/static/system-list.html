@@ -81,7 +81,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb text-right">
                                 <li >
-                                    <button type="button" class="btn btn-primary">新增系统</button>
+                                    <a id="btn_id_add_system" type="button" class="btn btn-primary" href="/system-edit.html" >新增系统</a>
                                 </li>
                             </ol>
                         </div>
@@ -99,14 +99,10 @@
                     <div class="card">
                         <div class="card-header">
                             <label>部门列表:</label>
-                            <select id="dept_id" >
-                                <option value="-1" >所有中心</option>
-                            </select>
+                            <select id="dept_id" > </select>
 
                             <label>产品列表:</label>
-                            <select id="pro_id" >
-                                <option value="-1" >所有产品</option>
-                            </select>
+                            <select id="pro_id" > </select>
                         </div>
                         <div class="table-stats order-table ov-h">
                             <table class="table ">
@@ -114,13 +110,18 @@
                                     <tr>
                                         <th>系统ID</th>
                                         <th>系统名称</th>
+                                        <th>系统标题</th>
+                                        <th>实例数</th>
+                                        <th>系统类型</th>
                                     </tr>
                                 </thead>
-                                <tbody id="id_deptList" >
-                                    <tr id="id_dept_row" >
-
+                                <tbody id="id_systemList" >
+                                    <tr id="id_system_row" >
                                         <td> <span class="id"></span> </td>
                                         <td> <span class="name"></span> </td>
+                                        <td> <a class="title"></a> </td>
+                                        <td> <span class="count"></span> </td>
+                                        <td> <span class="type"></span> </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -159,21 +160,82 @@
     // page init
     $(function(){
        loadDeptList() ;
+
+       $("#dept_id").change(function(){
+            loadProList() ;
+       });
+
+       $("#pro_id").change(function(){
+            loadSystemList() ;
+       });
+
     });
 
-    // load all dept list
+    // set selected dept
+    function setDeptSelect(){
+         var deptId = parseInt(QueryString.GetValue("deptId"));
+          if( deptId > 0 ){
+          $("#dept_id").val(deptId) ;
+       }
+    }
+
+    // set selected product
+    function setProSelect(){
+         var proId = parseInt(QueryString.GetValue("proId"));
+          if( proId > 0 ){
+          $("#pro_id").val(proId) ;
+       }
+    }
+
+     // load all dept list
     function loadDeptList(){
         var srvReq = $.ajax({ url: "/data/depts",  method: "GET", dataType: "json"  });
         srvReq.done(function(dataJson){
-            var rowTemplate = $("#id_dept_row").clone() ;
-            $("#id_dept_row").remove() ;
+            for( var i=0 ; i<dataJson.length ; i++ ){
+                $("#dept_id").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
+            }
+            // set dept selected
+            setDeptSelect() ;
+            // page init load product list
+            loadProList() ;
+         }) ;
+    }
+
+    // load product system list
+    var rowTemplate = $("#id_system_row").clone() ;
+    function loadSystemList(){
+        var proId = $("#pro_id").val() ;
+        var deptId = $("#dept_id").val() ;
+        var srvReq = $.ajax({ url: "/data/systems/"+proId,  method: "GET", dataType: "json"  });
+        srvReq.done(function(dataJson){
+            $("#id_systemList").children("tr").remove() ;
             for( var i=0 ; i<dataJson.length ; i++ ){
                 var row = rowTemplate.clone() ;
                 row.find(".id").text(dataJson[i].id);
                 row.find(".name").text(dataJson[i].name);
-                row.appendTo("#id_deptList") ;
+                row.find(".title").text(dataJson[i].title);
+                row.find(".title").attr("href" , "/system-edit.html?sysId="+dataJson[i].id + "&proId=" + proId + "&deptId="+deptId);
+                row.find(".count").text(dataJson[i].count);
+                row.find(".type").text(dataJson[i].type);
+                row.appendTo("#id_systemList") ;
             }
          }) ;
+    }
+
+    // load product list by deptId
+    function loadProList(){
+       var deptId = $("#dept_id").val() ;
+       var srvReq = $.ajax({ url: "/data/pros/"+deptId,  method: "GET", dataType: "json"  });
+       srvReq.done(function(dataJson){
+            $("#pro_id").empty() ;
+            for( var i=0 ; i<dataJson.length ; i++ ){
+                $("#pro_id").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
+            }
+             // set product selected
+             setProSelect() ;
+            // page init load system list
+            loadSystemList();
+        }) ;
     }
 
 </script>

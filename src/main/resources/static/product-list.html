@@ -201,9 +201,8 @@
          }) ;
     }
 
-    var rowTemplate = $("#id_pro_row").clone() ;
-
     // load product list
+    var rowTemplate = $("#id_pro_row").clone() ;
     function loadProList(){
        var deptId = $("#dept_id").val() ;
        var srvReq = $.ajax({ url: "/data/pros/"+deptId,  method: "GET", dataType: "json"  });
