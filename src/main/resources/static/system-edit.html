@@ -251,7 +251,7 @@
             method: "POST",
             dataType: "json" ,
             success: function(data){
-                $(window).attr("location","/system-list.html?deptId="+data.deptId);
+                $(window).attr("location","/system-list.html?deptId="+$("#form_dept_id").val() + "&proId=" + $("#form_pro_id").val() );
             },
             error: function(){
                 alert("保存系统失败");
@@ -269,7 +269,7 @@
             dataType: "json" ,
             success: function(data){
                 if(data){
-                  $(window).attr("location","/system-list.html?deptId=" + $("#form_dept_id").val());
+                  $(window).attr("location","/system-list.html?deptId=" + $("#form_dept_id").val() + "&proId=" + $("#form_pro_id").val() );
                 } else {
                   alert("删除系统信息失败");
                 }

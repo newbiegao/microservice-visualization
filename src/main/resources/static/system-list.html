@@ -100,7 +100,6 @@
                         <div class="card-header">
                             <label>部门列表:</label>
                             <select id="dept_id" > </select>
-
                             <label>产品列表:</label>
                             <select id="pro_id" > </select>
                         </div>
@@ -157,16 +156,44 @@
 
 <script type="text/javascript" >
 
+    QueryString = {
+        data: {},
+        Initial: function() {
+            var aPairs, aTmp;
+            var queryString = new String(window.location.search);
+            queryString = queryString.substr(1, queryString.length); //remove   "?"
+            aPairs = queryString.split("&");
+            for (var i = 0; i < aPairs.length; i++) {
+                aTmp = aPairs[i].split("=");
+                this.data[aTmp[0]] = aTmp[1];
+            }
+        },
+        GetValue: function(key) {
+            return this.data[key];
+        }
+    }
+    QueryString.Initial();
+
     // page init
     $(function(){
        loadDeptList() ;
 
        $("#dept_id").change(function(){
-            loadProList() ;
+          loadProList() ;
        });
 
        $("#pro_id").change(function(){
-            loadSystemList() ;
+           loadSystemList() ;
+       });
+
+       $("#btn_id_add_system").click(function(){
+            var deptId = $("#dept_id").val() ;
+            var proId  = $("#pro_id").val() ;
+            if( proId == null ){
+                alert("请选择产品") ;
+                return false  ;
+            }
+            $("#btn_id_add_system").attr("href" , "/system-edit.html?deptId=" + deptId + "&proId=" + proId );
        });
 
     });
@@ -174,8 +201,8 @@
     // set selected dept
     function setDeptSelect(){
          var deptId = parseInt(QueryString.GetValue("deptId"));
-          if( deptId > 0 ){
-          $("#dept_id").val(deptId) ;
+         if( deptId > 0 ){
+           $("#dept_id").val(deptId) ;
        }
     }
 
@@ -183,7 +210,11 @@
     function setProSelect(){
          var proId = parseInt(QueryString.GetValue("proId"));
           if( proId > 0 ){
-          $("#pro_id").val(proId) ;
+            var proSelect = "#pro_id option[value='1']" ;
+            if($("#pro_id option[value='"+ proId +"']").val() != undefined)
+            {
+                 $("#pro_id").val(proId) ;
+            };
        }
     }
 
@@ -233,8 +264,8 @@
             }
              // set product selected
              setProSelect() ;
-            // page init load system list
-            loadSystemList();
+             // page init load system list
+             loadSystemList();
         }) ;
     }
 
