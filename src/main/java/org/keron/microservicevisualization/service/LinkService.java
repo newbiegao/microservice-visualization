@@ -5,6 +5,8 @@ import org.keron.microservicevisualization.repository.LinkRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 import javax.swing.text.html.parser.Entity;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +18,9 @@ public class LinkService {
 
     @Autowired
     private LinkRepository linkRepository ;
+
+    @Autowired
+    private EntityManager entityManager ;
 
     /**
      *
@@ -36,6 +41,25 @@ public class LinkService {
            }
         }
         return  newFromList ;
+    }
+
+    public List loadLinksByFromId( Integer fromSysId ){
+        String sql = " select * from T_LINK where FROM_ID = :fromSysId " ;
+        Query query = entityManager.createNativeQuery(sql);
+        query.setParameter("fromSysId" , fromSysId) ;
+        return query.getResultList() ;
+    }
+
+    public LinkEntity saveLink( Integer fromSysId , Integer toSysId , String title ){
+        // find LinkEntity
+        LinkEntity linkEntity = linkRepository.loadLinkByFromToId(fromSysId , toSysId) ;
+        if( linkEntity == null  ){
+            linkEntity = new LinkEntity() ;
+        }
+        linkEntity.setFromId(fromSysId);
+        linkEntity.setToId(toSysId);
+        linkEntity.setTitle(title);
+        return linkRepository.saveAndFlush(linkEntity) ;
     }
 
 }

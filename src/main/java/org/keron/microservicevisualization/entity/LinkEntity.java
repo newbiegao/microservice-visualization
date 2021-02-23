@@ -13,6 +13,7 @@ public class LinkEntity implements NodeProcessInterface {
 
     @Id
     @Column(name = "LK_ID")
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id ;
 
     @Column(name = "FROM_ID")

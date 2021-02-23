@@ -40,4 +40,21 @@ public class LinkServiceTest {
 
         assertThat(linkEntityList).isNotEmpty()  ;
     }
+
+    @Test
+    public void loadLinksByFromIdTest(){
+
+        Integer fromSysId = 69 ;
+        List list = linkService.loadLinksByFromId(fromSysId) ;
+        assertThat(list).isNotEmpty();
+    }
+
+    @Test
+    public void saveLinkTest(){
+        Integer fromSysId = 69 ;
+        Integer toSysId = 100 ;
+        String tilte = fromSysId + "---" + toSysId ;
+        LinkEntity linkEntity = linkService.saveLink(fromSysId , toSysId,tilte) ;
+        assertThat(linkEntity).isNotNull() ;
+    }
 }
