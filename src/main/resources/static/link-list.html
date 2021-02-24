@@ -69,7 +69,7 @@
                 <div class="col-sm-4">
                     <div class="page-header float-left">
                         <div class="page-title">
-                            <h1>系统管理</h1>
+                            <h1>系统链接管理</h1>
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb text-right">
                                 <li >
-                                    <a id="btn_id_add_system" type="button" class="btn btn-primary" href="/system-edit.html" >新增系统</a>
+                                    <a id="btn_id_add_system" type="button" class="btn btn-primary" href="/system-edit.html" >新增系统链接</a>
                                 </li>
                             </ol>
                         </div>
@@ -95,11 +95,39 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
-                        <div class="card-header form-inline">
-                            <label class="form-control-label" >部门列表:</label>
-                            <select id="dept_id" class="form-control" > </select>
-                            <label class="form-control-label" >产品列表:</label>
-                            <select id="pro_id" class="form-control" > </select>
+                        <div class="card-body">
+                            <div class="row form-group">
+                                <div class="col col-md-5" >
+                                    <div class="row form-inline" >
+                                        <label class="form-control-label" >部门列表:</label>
+                                        <select id="dept_id_from" class="form-control" > </select>
+                                    </div>
+                                    <div class="row form-inline" >
+                                        <label class="form-control-label" >产品列表:</label>
+                                        <select id="pro_id_from" class="form-control" > </select>
+                                    </div>
+                                    <div class="row form-inline" >
+                                        <label class="form-control-label" >系统列表:</label>
+                                        <select id="sys_id_from" class="form-control" > </select>
+                                    </div>
+                                </div>
+                                <div class="col col-md-2" >
+                                </div>
+                                <div class="col col-md-5" >
+                                    <div class="row form-inline" >
+                                        <label class="form-control-label">部门列表:</label>
+                                        <select id="dept_id_to" class="form-control" > </select>
+                                    </div>
+                                    <div class="row form-inline" >
+                                        <label class="form-control-label" >产品列表:</label>
+                                        <select id="pro_id_to" class="form-control" > </select>
+                                    </div>
+                                    <div class="row form-inline" >
+                                        <label class="form-control-label" >系统列表:</label>
+                                        <select id="sys_id_to" class="form-control" > </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="table-stats order-table ov-h">
                             <table class="table ">
@@ -153,85 +181,46 @@
 
 <script type="text/javascript" >
 
-    QueryString = {
-        data: {},
-        Initial: function() {
-            var aPairs, aTmp;
-            var queryString = new String(window.location.search);
-            queryString = queryString.substr(1, queryString.length); //remove   "?"
-            aPairs = queryString.split("&");
-            for (var i = 0; i < aPairs.length; i++) {
-                aTmp = aPairs[i].split("=");
-                this.data[aTmp[0]] = aTmp[1];
-            }
-        },
-        GetValue: function(key) {
-            return this.data[key];
-        }
-    }
-    QueryString.Initial();
-
     // page init
     $(function(){
        loadDeptList() ;
 
-       $("#dept_id").change(function(){
-          loadProList() ;
+       $("#dept_id_from").change(function(){
+          loadProFromList() ;
+       });
+       $("#dept_id_to").change(function(){
+          loadProToList() ;
+       });
+       $("#pro_id_from").change(function(){
+          var proId = $("#pro_id_from").val() ;
+          loadSystemList("#sys_id_from" ,proId );
        });
 
-       $("#pro_id").change(function(){
-           loadSystemList() ;
-       });
-
-       $("#btn_id_add_system").click(function(){
-            var deptId = $("#dept_id").val() ;
-            var proId  = $("#pro_id").val() ;
-            if( proId == null ){
-                alert("请选择产品") ;
-                return false  ;
-            }
-            $("#btn_id_add_system").attr("href" , "/system-edit.html?deptId=" + deptId + "&proId=" + proId );
+       $("#pro_id_to").change(function(){
+          var proId = $("#pro_id_to").val() ;
+          loadSystemList("#sys_id_to" , proId);
        });
 
     });
-
-    // set selected dept
-    function setDeptSelect(){
-         var deptId = parseInt(QueryString.GetValue("deptId"));
-         if( deptId > 0 ){
-           $("#dept_id").val(deptId) ;
-       }
-    }
-
-    // set selected product
-    function setProSelect(){
-         var proId = parseInt(QueryString.GetValue("proId"));
-          if( proId > 0 ){
-            var proSelect = "#pro_id option[value='1']" ;
-            if($("#pro_id option[value='"+ proId +"']").val() != undefined)
-            {
-                 $("#pro_id").val(proId) ;
-            };
-       }
-    }
 
      // load all dept list
     function loadDeptList(){
         var srvReq = $.ajax({ url: "/data/depts",  method: "GET", dataType: "json"  });
         srvReq.done(function(dataJson){
             for( var i=0 ; i<dataJson.length ; i++ ){
-                $("#dept_id").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
+                $("#dept_id_from").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
+                $("#dept_id_to").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
             }
-            // set dept selected
-            setDeptSelect() ;
+
             // page init load product list
-            loadProList() ;
+            loadProFromList() ;
+            loadProToList() ;
          }) ;
     }
 
     // load product system list
     var rowTemplate = $("#id_system_row").clone() ;
-    function loadSystemList(){
+    function loadLinkList(){
         var proId = $("#pro_id").val() ;
         var deptId = $("#dept_id").val() ;
         var srvReq = $.ajax({ url: "/data/systems/"+proId,  method: "GET", dataType: "json"  });
@@ -250,19 +239,37 @@
          }) ;
     }
 
+    // load systemList
+    function loadSystemList( listId , proId ){
+        var srvReq = $.ajax({ url: "/data/systems/"+proId,  method: "GET", dataType: "json"  });
+        srvReq.done(function(dataJson){
+            for( var i=0 ; i<dataJson.length ; i++ ){
+                $(listId).append("<option value='"+dataJson[i].id+"'>"+dataJson[i].title+"</option>")
+            }
+         }) ;
+    }
+
     // load product list by deptId
-    function loadProList(){
-       var deptId = $("#dept_id").val() ;
+    function loadProFromList(){
+       var deptId = $("#dept_id_from").val() ;
        var srvReq = $.ajax({ url: "/data/pros/"+deptId,  method: "GET", dataType: "json"  });
        srvReq.done(function(dataJson){
-            $("#pro_id").empty() ;
+            $("#pro_id_from").empty() ;
             for( var i=0 ; i<dataJson.length ; i++ ){
-                $("#pro_id").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
+                $("#pro_id_from").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
             }
-             // set product selected
-             setProSelect() ;
-             // page init load system list
-             loadSystemList();
+        }) ;
+    }
+
+    // load product list by deptId
+    function loadProToList(){
+       var deptId = $("#dept_id_to").val() ;
+       var srvReq = $.ajax({ url: "/data/pros/"+deptId,  method: "GET", dataType: "json"  });
+       srvReq.done(function(dataJson){
+            $("#pro_id_to").empty() ;
+            for( var i=0 ; i<dataJson.length ; i++ ){
+                $("#pro_id_to").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
+            }
         }) ;
     }
 
