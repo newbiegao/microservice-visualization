@@ -79,7 +79,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb text-right">
                                 <li >
-                                    <a id="btn_id_add_system" type="button" class="btn btn-primary" href="/system-edit.html" >新增系统链接</a>
+                                    <button id="btn_id_add_link" type="button" class="btn btn-primary" >新增系统链接</button>
                                 </li>
                             </ol>
                         </div>
@@ -128,25 +128,33 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="row form-group">
+                                <div class="col col-md-2" >
+                                    <label class="form-control-label">系统链接标题</label>
+                                </div>
+                                <div class="col col-md-10" >
+                                    <input id="link_title" type="text" class="form-control" aria-describedby="系统链接标题">
+                                </div>
+                            </div>
                         </div>
                         <div class="table-stats order-table ov-h">
                             <table class="table ">
                                 <thead>
                                     <tr>
-                                        <th>系统ID</th>
-                                        <th>系统名称</th>
-                                        <th>系统标题</th>
-                                        <th>实例数</th>
-                                        <th>系统类型</th>
+                                        <th>链接ID</th>
+                                        <th>FROM系统</th>
+                                        <th>链接标题</th>
+                                        <th>TO系统</th>
+                                        <th>操作</th>
                                     </tr>
                                 </thead>
-                                <tbody id="id_systemList" >
-                                    <tr id="id_system_row" >
+                                <tbody id="id_linkList" >
+                                    <tr id="id_link_row" >
                                         <td> <span class="id"></span> </td>
-                                        <td> <span class="name"></span> </td>
-                                        <td> <a class="title"></a> </td>
-                                        <td> <span class="count"></span> </td>
-                                        <td> <span class="type"></span> </td>
+                                        <td> <span class="fromSys"></span> </td>
+                                        <td> <span class="title"></span> </td>
+                                        <td> <span class="toSys"></span> </td>
+                                        <td> <span class="cls_link_delete" onclick="deleteLink(this);"  >删除</span> </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -188,9 +196,11 @@
        $("#dept_id_from").change(function(){
           loadProFromList() ;
        });
+
        $("#dept_id_to").change(function(){
           loadProToList() ;
        });
+
        $("#pro_id_from").change(function(){
           var proId = $("#pro_id_from").val() ;
           loadSystemList("#sys_id_from" ,proId );
@@ -200,6 +210,13 @@
           var proId = $("#pro_id_to").val() ;
           loadSystemList("#sys_id_to" , proId);
        });
+
+       $("#btn_id_add_link").click(function(){
+          saveLink() ;
+       });
+
+       // load link list
+       loadLinkList();
 
     });
 
@@ -219,22 +236,19 @@
     }
 
     // load product system list
-    var rowTemplate = $("#id_system_row").clone() ;
+    var rowTemplate = $("#id_link_row").clone() ;
     function loadLinkList(){
-        var proId = $("#pro_id").val() ;
-        var deptId = $("#dept_id").val() ;
-        var srvReq = $.ajax({ url: "/data/systems/"+proId,  method: "GET", dataType: "json"  });
+        var srvReq = $.ajax({ url: "/data/link/list",  method: "GET", dataType: "json"  });
         srvReq.done(function(dataJson){
-            $("#id_systemList").children("tr").remove() ;
+            $("#id_linkList").children("tr").remove() ;
             for( var i=0 ; i<dataJson.length ; i++ ){
                 var row = rowTemplate.clone() ;
-                row.find(".id").text(dataJson[i].id);
-                row.find(".name").text(dataJson[i].name);
-                row.find(".title").text(dataJson[i].title);
-                row.find(".title").attr("href" , "/system-edit.html?sysId="+dataJson[i].id + "&proId=" + proId + "&deptId="+deptId);
-                row.find(".count").text(dataJson[i].count);
-                row.find(".type").text(dataJson[i].type);
-                row.appendTo("#id_systemList") ;
+                row.find(".id").text(dataJson[i][0]);
+                row.find(".fromSys").text(dataJson[i][1]);
+                row.find(".title").text(dataJson[i][2]);
+                row.find(".toSys").text(dataJson[i][3]);
+                row.find(".cls_link_delete").attr("data-val" , dataJson[i][0]);
+                row.appendTo("#id_linkList") ;
             }
          }) ;
     }
@@ -243,6 +257,7 @@
     function loadSystemList( listId , proId ){
         var srvReq = $.ajax({ url: "/data/systems/"+proId,  method: "GET", dataType: "json"  });
         srvReq.done(function(dataJson){
+            $(listId).empty() ;
             for( var i=0 ; i<dataJson.length ; i++ ){
                 $(listId).append("<option value='"+dataJson[i].id+"'>"+dataJson[i].title+"</option>")
             }
@@ -258,6 +273,8 @@
             for( var i=0 ; i<dataJson.length ; i++ ){
                 $("#pro_id_from").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
             }
+            // load systemList
+            loadSystemList("#sys_id_from" , $("#pro_id_from").val()) ;
         }) ;
     }
 
@@ -270,7 +287,56 @@
             for( var i=0 ; i<dataJson.length ; i++ ){
                 $("#pro_id_to").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
             }
+            // load systemList
+            loadSystemList("#sys_id_to" , $("#pro_id_to").val()) ;
         }) ;
+    }
+
+
+    // save link
+    function saveLink(){
+        var fromId = $("#sys_id_from").val() ;
+        var toId = $("#sys_id_to").val() ;
+        if( fromId == null || fromId =='' || toId == null || toId == '' ){
+            alert("请选择系统");
+            return ;
+        }
+        var postData = {
+           fromId : fromId ,
+           toId : toId ,
+           title : $("#link_title").val()
+        } ;
+        $.ajax({
+            url: "/data/link/save" ,
+            data: postData ,
+            method: "POST",
+            dataType: "json" ,
+            success: function(data){
+               loadLinkList() ;
+            },
+            error: function(){
+                alert("保存链接失败");
+            }
+        });
+    }
+
+    // delete link
+    function deleteLink( obj ){
+        var linkId =  $(obj).attr("data-val");
+        if( confirm("确定删除该链接吗？") ){
+             $.ajax({
+                url: "/data/link/delete" ,
+                data: { 'linkId' : linkId } ,
+                method: "POST",
+                dataType: "json" ,
+                success: function(data){
+                   loadLinkList() ;
+                },
+                error: function(){
+                    alert("删除链接失败");
+                }
+             });
+        }
     }
 
 </script>

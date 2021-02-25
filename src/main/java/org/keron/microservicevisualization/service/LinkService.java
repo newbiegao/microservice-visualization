@@ -43,10 +43,12 @@ public class LinkService {
         return  newFromList ;
     }
 
-    public List loadLinksByFromId( Integer fromSysId ){
-        String sql = " select * from T_LINK where FROM_ID = :fromSysId " ;
+    public List loadLinkList( ){
+        String sql = "select lk.LK_ID, s.SYS_TITLE fromTitle , lk.LK_TITLE , s1.SYS_TITLE toTitle\n" +
+                    "from T_LINK lk " +
+                    "left join T_SYSTEM s on lk.FROM_ID = s.SYS_ID " +
+                    "left join T_SYSTEM s1 on lk.TO_ID = s1.SYS_ID" ;
         Query query = entityManager.createNativeQuery(sql);
-        query.setParameter("fromSysId" , fromSysId) ;
         return query.getResultList() ;
     }
 
@@ -61,5 +63,10 @@ public class LinkService {
         linkEntity.setTitle(title);
         return linkRepository.saveAndFlush(linkEntity) ;
     }
+
+    public void deleteLink( Integer linkId ){
+        linkRepository.deleteById(linkId);
+    }
+
 
 }

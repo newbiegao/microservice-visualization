@@ -44,8 +44,7 @@ public class LinkServiceTest {
     @Test
     public void loadLinksByFromIdTest(){
 
-        Integer fromSysId = 69 ;
-        List list = linkService.loadLinksByFromId(fromSysId) ;
+        List list = linkService.loadLinkList() ;
         assertThat(list).isNotEmpty();
     }
 
