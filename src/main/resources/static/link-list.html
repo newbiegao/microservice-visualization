@@ -79,7 +79,7 @@
                         <div class="page-title">
                             <ol class="breadcrumb text-right">
                                 <li >
-                                    <button id="btn_id_add_link" type="button" class="btn btn-primary" >新增系统链接</button>
+                                    <button id="btn_id_add_link" type="button" class="btn btn-primary" >保存系统链接</button>
                                 </li>
                             </ol>
                         </div>
@@ -108,7 +108,9 @@
                                     </div>
                                     <div class="row form-inline" >
                                         <label class="form-control-label" >系统列表:</label>
-                                        <select id="sys_id_from" class="form-control" > </select>
+                                        <select id="sys_id_from" class="form-control" >
+                                            <option value="-1" >所有系统</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col col-md-2" >
@@ -124,7 +126,9 @@
                                     </div>
                                     <div class="row form-inline" >
                                         <label class="form-control-label" >系统列表:</label>
-                                        <select id="sys_id_to" class="form-control" > </select>
+                                        <select id="sys_id_to" class="form-control" >
+                                            <option value="-1" >所有系统</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -215,8 +219,9 @@
           saveLink() ;
        });
 
-       // load link list
-       loadLinkList();
+        $("#sys_id_from,#sys_id_to").change(function(){
+           loadLinkList();
+       });
 
     });
 
@@ -238,7 +243,14 @@
     // load product system list
     var rowTemplate = $("#id_link_row").clone() ;
     function loadLinkList(){
-        var srvReq = $.ajax({ url: "/data/link/list",  method: "GET", dataType: "json"  });
+
+        var postData = {
+           fromProId : $("#pro_id_from").val() ,
+           fromSysId : $("#sys_id_from").val() ,
+           toProId : $("#pro_id_to").val() ,
+           toSysId : $("#sys_id_to").val()
+        } ;
+        var srvReq = $.ajax({ url: "/data/link/list", data: postData , method: "POST", dataType: "json"  });
         srvReq.done(function(dataJson){
             $("#id_linkList").children("tr").remove() ;
             for( var i=0 ; i<dataJson.length ; i++ ){
@@ -258,9 +270,12 @@
         var srvReq = $.ajax({ url: "/data/systems/"+proId,  method: "GET", dataType: "json"  });
         srvReq.done(function(dataJson){
             $(listId).empty() ;
+            $(listId).append("<option value='-1'>所有系统</option>")
             for( var i=0 ; i<dataJson.length ; i++ ){
                 $(listId).append("<option value='"+dataJson[i].id+"'>"+dataJson[i].title+"</option>")
             }
+            // load link list
+            loadLinkList();
          }) ;
     }
 
@@ -297,7 +312,7 @@
     function saveLink(){
         var fromId = $("#sys_id_from").val() ;
         var toId = $("#sys_id_to").val() ;
-        if( fromId == null || fromId =='' || toId == null || toId == '' ){
+        if( fromId < 0 ||  toId < 0 ){
             alert("请选择系统");
             return ;
         }

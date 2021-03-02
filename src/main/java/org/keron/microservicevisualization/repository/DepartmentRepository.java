@@ -24,4 +24,7 @@ public interface DepartmentRepository extends JpaRepository<DepartmentEntity , I
     @Query(" delete from DepartmentEntity d where d.id = :deptId ")
     void deleteDepartmentEntity(@Param("deptId") Integer deptId ) ;
 
+    @Query(" select max(d.id) from DepartmentEntity d ")
+    Integer findMaxDeptId() ;
+
 }

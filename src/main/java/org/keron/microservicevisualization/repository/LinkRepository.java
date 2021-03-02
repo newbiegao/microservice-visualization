@@ -2,6 +2,7 @@ package org.keron.microservicevisualization.repository;
 
 import org.keron.microservicevisualization.entity.LinkEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -18,5 +19,9 @@ public interface LinkRepository extends JpaRepository<LinkEntity, Integer> {
 
     @Query( value = "from LinkEntity lk where lk.fromId= :fromSysId and lk.toId = :toSysId " )
     LinkEntity loadLinkByFromToId(@Param("fromSysId") Integer fromSysId , @Param("toSysId") Integer toSysId ) ;
+
+    @Modifying()
+    @Query( value = "delete LinkEntity lk where lk.fromId= :sysId or lk.toId = :sysId " )
+    void deleteLinkBySysId( @Param("sysId") Integer sysId ) ;
 
 }

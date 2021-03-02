@@ -43,12 +43,27 @@ public class LinkService {
         return  newFromList ;
     }
 
-    public List loadLinkList( ){
-        String sql = "select lk.LK_ID, s.SYS_TITLE fromTitle , lk.LK_TITLE , s1.SYS_TITLE toTitle\n" +
+    public List loadLinkList( Integer fromProId , Integer fromSysId , Integer toProId , Integer toSysId ){
+        String sql = "select lk.LK_ID, s.SYS_TITLE fromTitle , lk.LK_TITLE , s1.SYS_TITLE toTitle " +
                     "from T_LINK lk " +
                     "left join T_SYSTEM s on lk.FROM_ID = s.SYS_ID " +
-                    "left join T_SYSTEM s1 on lk.TO_ID = s1.SYS_ID" ;
+                    "left join T_SYSTEM s1 on lk.TO_ID = s1.SYS_ID " +
+                    "where s.PRO_ID = :fromProId and s1.PRO_ID = :toProId ";
+        if( fromSysId > 0 ){
+            sql = sql + " and lk.FROM_ID =:fromSysId " ;
+        }
+        if( toSysId > 0 ){
+            sql = sql + " and lk.TO_ID =:toSysId " ;
+        }
         Query query = entityManager.createNativeQuery(sql);
+        query.setParameter("fromProId" , fromProId) ;
+        query.setParameter("toProId" , toProId) ;
+        if( fromSysId > 0 ){
+            query.setParameter("fromSysId" , fromSysId) ;
+        }
+        if( toSysId > 0 ){
+            query.setParameter("toSysId" , toSysId) ;
+        }
         return query.getResultList() ;
     }
 

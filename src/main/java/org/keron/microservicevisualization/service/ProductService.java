@@ -65,6 +65,10 @@ public class ProductService {
         return true ;
     }
 
+    public Integer loadNextProductId(){
+        return productRepository.loadMaxProductId() + 1 ;
+    }
+
     /**
      *
      * @param deptId

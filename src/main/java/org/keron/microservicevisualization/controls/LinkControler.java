@@ -15,9 +15,9 @@ public class LinkControler {
     @Autowired
     private LinkService linkService ;
 
-    @GetMapping("/data/link/list")
-    public List loadLinkList(){
-        return linkService.loadLinkList() ;
+    @PostMapping("/data/link/list")
+    public List loadLinkList(Integer fromProId , Integer fromSysId , Integer toProId , Integer toSysId){
+        return linkService.loadLinkList( fromProId , fromSysId , toProId , toSysId ) ;
     }
 
     @PostMapping("/data/link/save")

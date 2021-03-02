@@ -46,4 +46,9 @@ public class SystemControler {
         return systemService.saveSystemEntity( proId , sysId , sysName , sysTitle , sysType , sysCount ) ;
     }
 
+    @GetMapping("/data/system/nextId")
+    public Integer loadNextSystemId(){
+        return systemService.loadNextSystemId() ;
+    }
+
 }

@@ -78,4 +78,11 @@ public class DepartmentServiceTest {
         Boolean isDel = departmentService.deleteDept(deptId) ;
         assertThat(isDel).isTrue() ;
     }
+
+    @Test
+    public void loadMaxDeptIdTest(){
+        Integer maxDeptId =  departmentService.loadNextDeptId() ;
+        logger.debug("max deptId  : {}" ,maxDeptId );
+        assertThat(maxDeptId).isGreaterThan(1) ;
+    }
 }

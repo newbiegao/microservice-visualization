@@ -137,7 +137,7 @@
         <div class="footer-inner bg-white">
             <div class="row">
                 <div class="col-sm-6">
-                    Copyright &copy; 2020.Company name All rights reserved.
+                    Copyright &copy; 2021. WeHotel All rights reserved.
                 </div>
                 <div class="col-sm-6 text-right">
 
@@ -188,6 +188,9 @@
        if( deptId > 0 ){
           loadDept(deptId);
        }
+       else{
+          loadNextDeptId() ;
+       }
     });
 
     // load dept info
@@ -196,6 +199,15 @@
         srvReq.done(function(dataJson){
            $("#from_dept_id").val(dataJson.id);
            $("#form_dept_name").val(dataJson.name);
+        }) ;
+    }
+
+    // load next deptId
+    function loadNextDeptId(){
+        var srvReq = $.ajax({ url: "/data/dept/nextId" ,  method: "GET", dataType: "json"  });
+        srvReq.done(function(dataJson){
+           alert(dataJson) ;
+           $("#from_dept_id").val(dataJson);
         }) ;
     }
 

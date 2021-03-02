@@ -212,6 +212,9 @@
        if( sysId > 0 ){
           loadSystem(sysId);
        }
+       else{
+          loadNextSystemId() ;
+       }
 
        // set toolbar url
        setToolBarUrl() ;
@@ -239,6 +242,14 @@
            $("#form_sys_title").val(dataJson.title);
            $("#form_sys_count").val(dataJson.count);
            $("#form_sys_type").val(dataJson.type);
+        }) ;
+    }
+
+    // load next systemId
+    function loadNextSystemId(){
+        var srvReq = $.ajax({ url: "/data/system/nextId" ,  method: "GET", dataType: "json"  });
+        srvReq.done(function(dataJson){
+           $("#form_sys_id").val(dataJson);
         }) ;
     }
 

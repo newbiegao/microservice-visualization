@@ -1,6 +1,7 @@
 package org.keron.microservicevisualization.service;
 
 import org.keron.microservicevisualization.entity.SystemEntity;
+import org.keron.microservicevisualization.repository.LinkRepository;
 import org.keron.microservicevisualization.repository.SystemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,9 @@ public class SystemService {
 
     @Autowired
     private SystemRepository systemRepository ;
+
+    @Autowired
+    private LinkRepository linkRepository ;
 
     public SystemEntity loadSystemEntity( Integer sysId ){
         return systemRepository.loadSystemEntity(sysId) ;
@@ -48,9 +52,13 @@ public class SystemService {
     }
 
     public boolean deleteSystem( Integer sysId ){
-        // TODO: delete node link entity
-
+        // delete node link entity
+        linkRepository.deleteLinkBySysId(sysId);
         systemRepository.deleteById(sysId);
         return true ;
+    }
+
+    public Integer loadNextSystemId(){
+        return systemRepository.loadMaxSystemId() + 1 ;
     }
 }

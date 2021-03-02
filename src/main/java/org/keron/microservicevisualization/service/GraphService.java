@@ -38,13 +38,25 @@ public class GraphService {
 
         DepartmentEntity departmentEntity = departmentService.loadDepartmentEntityAndProducts(deptId) ;
 
+        // load links
+        List<LinkEntity> linkEntityList = new ArrayList<>() ;
+        for( ProductEntity productEntity : departmentEntity.getProductEntityList() ){
+
+            linkEntityList.addAll(loadLinks(productEntity.getSystemEntityList())) ;
+        }
+
         // create charts
         FlowchartsBuilder builder = new FlowchartsBuilder() ;
         Graph graph = new Graph() ;
         graph.setLayout(direction);
         graph.addNode(departmentEntity.initNode());
-        String text = builder.build(graph) ;
 
+        // add node link
+        for( LinkEntity linkEntity : linkEntityList ){
+            graph.addLink( (Link)linkEntity.initNode() );
+        }
+
+        String text = builder.build(graph) ;
         logger.debug("node text : {}" , text);
         return text ;
 

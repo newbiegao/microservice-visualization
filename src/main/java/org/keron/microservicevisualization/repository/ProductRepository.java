@@ -23,4 +23,7 @@ public interface ProductRepository extends JpaRepository<ProductEntity , Integer
     @Query(" select count(*) from ProductEntity p where p.deptId = :deptId ")
     Integer loadDeptProductCounts( @Param("deptId") Integer deptI ) ;
 
+    @Query(" select max(p.id) from ProductEntity p ")
+    Integer loadMaxProductId( ) ;
+
 }

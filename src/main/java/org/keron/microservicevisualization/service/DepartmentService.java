@@ -108,4 +108,8 @@ public class DepartmentService {
         return true ;
     }
 
+    public Integer loadNextDeptId(){
+       return departmentRepository.findMaxDeptId() + 1 ;
+    }
+
 }

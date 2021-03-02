@@ -176,7 +176,7 @@
        var srvReq = $.ajax({ url: "/data/pros/"+deptId,  method: "GET", dataType: "json"  });
        srvReq.done(function(dataJson){
             $("#pro_id").empty() ;
-             $("#pro_id").append("<option value='-1'>所有产品</option>")
+            $("#pro_id").append("<option value='-1'>所有产品</option>")
             for( var i=0 ; i<dataJson.length ; i++ ){
                 $("#pro_id").append("<option value='"+dataJson[i].id+"'>"+dataJson[i].name+"</option>")
             }

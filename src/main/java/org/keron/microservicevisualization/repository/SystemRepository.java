@@ -22,4 +22,7 @@ public interface SystemRepository  extends JpaRepository<SystemEntity, Integer> 
     @Query(" select count(*) from SystemEntity s where s.proId = :proId ")
     Integer loadSystemCount( @Param("proId") Integer proId ) ;
 
+    @Query(" select max(s.id) from SystemEntity s ")
+    Integer loadMaxSystemId( ) ;
+
 }

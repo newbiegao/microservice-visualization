@@ -66,4 +66,9 @@ public class DepartmentChartControler {
         return departmentService.loadDepartment(deptId) ;
     }
 
+    @GetMapping("/data/dept/nextId")
+    public Integer loadNextDeptId(){
+        return departmentService.loadNextDeptId() ;
+    }
+
 }
